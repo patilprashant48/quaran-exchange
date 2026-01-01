@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chat Support - Qaran Exchange">
+    <title>Chat Support - Qaran Exchange</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="images/logo.jpg" alt="Qaran Exchange Logo" class="logo-img">
+                    <span class="logo-text">Qaran Exchange</span>
+                </div>
+                
+                <div class="nav-menu" id="navMenu">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link" data-translate="nav_home">Home</a></li>
+                        <li><a href="about.html" class="nav-link" data-translate="nav_about">About Us</a></li>
+                        <li><a href="services.html" class="nav-link" data-translate="nav_services">Services</a></li>
+                        <li><a href="contact.html" class="nav-link" data-translate="nav_contact">Contact Us</a></li>
+                        <li><a href="chat.html" class="nav-link active chat-link" data-translate="nav_chat">Chat Support</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-actions">
+                    <div class="auth-buttons" id="authButtons">
+                        <a href="login.html" class="btn-login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span data-translate="nav_login">Login</span>
+                        </a>
+                        <a href="register.html" class="btn-register">
+                            <i class="fas fa-user-plus"></i>
+                            <span data-translate="nav_register">Register</span>
+                        </a>
+                    </div>
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <button class="user-btn" id="userBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userNameNav">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+                            <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                    <div class="language-switcher">
+                        <button class="lang-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">EN</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button class="lang-option" data-lang="en">English</button>
+                            <button class="lang-option" data-lang="so">Somali</button>
+                        </div>
+                    </div>
+                    <button class="mobile-toggle" id="mobileToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header small-header">
+        <div class="container">
+            <h1 data-translate="chat_page_title">Live Chat Support</h1>
+            <p data-translate="chat_page_subtitle">Get instant help from our support team</p>
+        </div>
+    </section>
+
+    <!-- Chat Section -->
+    <section class="chat-section">
+        <div class="container">
+            <div class="chat-container-main">
+                <div class="chat-sidebar">
+                    <div class="chat-sidebar-header">
+                        <h3 data-translate="chat_quick_help">Quick Help</h3>
+                    </div>
+                    <div class="quick-topics">
+                        <button class="topic-btn" data-topic="transfer" data-translate="chat_topic_transfer">Money Transfer</button>
+                        <button class="topic-btn" data-topic="rates" data-translate="chat_topic_rates">Exchange Rates</button>
+                        <button class="topic-btn" data-topic="account" data-translate="chat_topic_account">Account Issues</button>
+                        <button class="topic-btn" data-topic="fees" data-translate="chat_topic_fees">Fees & Charges</button>
+                        <button class="topic-btn" data-topic="crypto" data-translate="chat_topic_crypto">Digital Currency</button>
+                    </div>
+                    
+                    <div class="faq-section">
+                        <h4 data-translate="chat_faq_title">Frequent Questions</h4>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <p data-translate="chat_faq_1">How long does a transfer take?</p>
+                            </div>
+                            <div class="faq-item">
+                                <p data-translate="chat_faq_2">What are the transaction fees?</p>
+                            </div>
+                            <div class="faq-item">
+                                <p data-translate="chat_faq_3">How to track my transfer?</p>
+                            </div>
+                            <div class="faq-item">
+                                <p data-translate="chat_faq_4">What documents do I need?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-main">
+                    <div class="chat-header">
+                        <div class="chat-header-info">
+                            <div class="agent-avatar">
+                                <i class="fas fa-user-headset"></i>
+                                <span class="online-indicator"></span>
+                            </div>
+                            <div class="agent-info">
+                                <h3 data-translate="chat_support_team">Support Team</h3>
+                                <p class="agent-status" data-translate="chat_online">Online - We're here to help</p>
+                            </div>
+                        </div>
+                        <div class="chat-actions">
+                            <button class="chat-action-btn" title="Minimize">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button class="chat-action-btn" title="Close">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-message bot-message">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                <div class="message-bubble">
+                                    <p data-translate="chat_welcome">Welcome to Qaran Exchange! How can we help you today?</p>
+                                </div>
+                                <span class="message-time">Just now</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-wrapper">
+                        <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <form class="chat-input-form" id="chatForm">
+                            <button type="button" class="attach-btn" title="Attach file">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <input type="text" class="chat-input" id="chatInput" data-translate-placeholder="chat_placeholder" placeholder="Type your message...">
+                            <button type="submit" class="send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Support Info -->
+    <section class="support-info">
+        <div class="container">
+            <div class="support-grid">
+                <div class="support-card">
+                    <i class="fas fa-clock"></i>
+                    <h3 data-translate="support_availability">24/7 Availability</h3>
+                    <p data-translate="support_availability_desc">Our chat support is available round the clock to assist you</p>
+                </div>
+                <div class="support-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3 data-translate="support_instant">Instant Responses</h3>
+                    <p data-translate="support_instant_desc">Get immediate answers to your questions</p>
+                </div>
+                <div class="support-card">
+                    <i class="fas fa-language"></i>
+                    <h3 data-translate="support_multilingual">Multilingual Support</h3>
+                    <p data-translate="support_multilingual_desc">Chat in English or Somali</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Qaran Exchange</h3>
+                    <p data-translate="footer_desc">Your trusted partner for secure money transfers and currency exchange services.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-translate="footer_quick_links">Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html" data-translate="nav_home">Home</a></li>
+                        <li><a href="about.html" data-translate="nav_about">About Us</a></li>
+                        <li><a href="services.html" data-translate="nav_services">Services</a></li>
+                        <li><a href="contact.html" data-translate="nav_contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-translate="footer_services">Services</h4>
+                    <ul>
+                        <li><a href="services.html" data-translate="service_mobile_money">Mobile Money Exchange</a></li>
+                        <li><a href="services.html" data-translate="service_betting_wallets">Betting Wallet Exchange</a></li>
+                        <li><a href="services.html" data-translate="service_usdt_exchange">USDT Exchange</a></li>
+                        <li><a href="chat.html" data-translate="nav_chat">Chat Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-translate="footer_contact">Contact Info</h4>
+                    <ul class="contact-info">
+                        <li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/252612178241" style="color: inherit; text-decoration: none;">+252 61 217 8241</a></li>
+                        <li><i class="fas fa-envelope"></i> info@qaranexchange.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> <span data-translate="footer_location">Mogadishu, Somalia</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Qaran Exchange. <span data-translate="footer_rights">All rights reserved.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/translations.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/main.js"></script>    <script src="js/auth.js"></script></body>
+</html>

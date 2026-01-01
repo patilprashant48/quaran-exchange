@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Customer Submissions - Qaran Exchange</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #f5f5f5;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+        }
+
+        .admin-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .admin-header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+        }
+
+        .admin-header p {
+            color: #666;
+            margin: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .stat-icon.blue { background: #e3f2fd; color: #2196F3; }
+        .stat-icon.green { background: #e8f5e9; color: #4caf50; }
+        .stat-icon.orange { background: #fff3e0; color: #ff9800; }
+        .stat-icon.red { background: #ffebee; color: #f44336; }
+
+        .stat-info h3 {
+            color: #666;
+            font-size: 0.9rem;
+            margin: 0 0 5px 0;
+            font-weight: 500;
+        }
+
+        .stat-info p {
+            color: #333;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .controls-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .controls-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .control-group select,
+        .control-group input {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-group select:focus,
+        .control-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .export-btn {
+            padding: 10px 20px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .export-btn i {
+            margin-right: 8px;
+        }
+
+        .submissions-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 25px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h2 {
+            color: #333;
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .refresh-btn {
+            padding: 8px 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #1976d2;
+        }
+
+        .refresh-btn i {
+            margin-right: 5px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f5f5f5;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .status-processing {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-completed {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .status-rejected {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+        }
+
+        .view-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .view-btn:hover {
+            background: #1976d2;
+        }
+
+        .update-btn {
+            background: #4caf50;
+            color: white;
+        }
+
+        .update-btn:hover {
+            background: #45a049;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        .empty-state h3 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 0;
+            width: 90%;
+            max-width: 700px;
+            border-radius: 15px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section h3 {
+            color: #333;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        .account-item {
+            background: #f5f5f5;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 2px solid #f0f0f0;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .status-select {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            margin-right: auto;
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                margin-top: 80px;
+            }
+
+            .admin-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .controls-row {
+                grid-template-columns: 1fr;
+            }
+
+            .table-container {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+
+            .detail-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Qaran Exchange Logo">
+            </div>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+            <div class="nav-menu">
+                <button class="close-menu" aria-label="Close menu">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="nav-content">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link">Home</a></li>
+                        <li><a href="admin-payments.html" class="nav-link">Payments</a></li>
+                        <li><a href="admin-submissions.html" class="nav-link active">Submissions</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="admin-container">
+        <!-- Header -->
+        <div class="admin-header">
+            <h1><i class="fas fa-clipboard-list"></i> Customer Submissions</h1>
+            <p>View and manage all customer account detail submissions</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Submissions</h3>
+                    <p id="totalSubmissions">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Pending Review</h3>
+                    <p id="pendingSubmissions">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fas fa-spinner"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Processing</h3>
+                    <p id="processingSubmissions">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Completed</h3>
+                    <p id="completedSubmissions">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-section">
+            <div class="controls-row">
+                <div class="control-group">
+                    <label for="statusFilter">Filter by Status</label>
+                    <select id="statusFilter">
+                        <option value="all">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="completed">Completed</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="dateFilter">Filter by Date</label>
+                    <input type="date" id="dateFilter">
+                </div>
+                <div class="control-group">
+                    <label>&nbsp;</label>
+                    <button class="export-btn" onclick="exportToCSV()">
+                        <i class="fas fa-download"></i>
+                        Export CSV
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submissions Table -->
+        <div class="submissions-section">
+            <div class="table-header">
+                <h2>All Submissions</h2>
+                <button class="refresh-btn" onclick="loadSubmissions()">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh
+                </button>
+            </div>
+            <div class="table-container">
+                <table id="submissionsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date & Time</th>
+                            <th>Customer Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Accounts Provided</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="submissionsBody">
+                        <tr>
+                            <td colspan="8">
+                                <div class="empty-state">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <h3>Loading submissions...</h3>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- View Submission Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-eye"></i> Submission Details</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be loaded dynamically -->
+            </div>
+            <div class="modal-footer">
+                <select class="status-select" id="modalStatusSelect">
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="completed">Completed</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                <button class="update-btn action-btn" onclick="updateStatus()">
+                    Update Status
+                </button>
+                <button class="action-btn" style="background: #999;" onclick="closeModal()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        let allSubmissions = [];
+        let currentSubmissionId = null;
+
+        // Load all submissions
+        async function loadSubmissions() {
+            try {
+                const response = await fetch('http://localhost:3000/api/submissions/all');
+                const data = await response.json();
+
+                if (data.success) {
+                    allSubmissions = data.submissions;
+                    displaySubmissions(allSubmissions);
+                    updateStatistics(allSubmissions);
+                }
+            } catch (error) {
+                console.error('Error loading submissions:', error);
+                document.getElementById('submissionsBody').innerHTML = `
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <h3>Error loading submissions</h3>
+                                <p>Please check your connection and try again.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Update statistics
+        function updateStatistics(submissions) {
+            const total = submissions.length;
+            const pending = submissions.filter(s => s.status === 'pending').length;
+            const processing = submissions.filter(s => s.status === 'processing').length;
+            const completed = submissions.filter(s => s.status === 'completed').length;
+
+            document.getElementById('totalSubmissions').textContent = total;
+            document.getElementById('pendingSubmissions').textContent = pending;
+            document.getElementById('processingSubmissions').textContent = processing;
+            document.getElementById('completedSubmissions').textContent = completed;
+        }
+
+        // Display submissions
+        function displaySubmissions(submissions) {
+            const tbody = document.getElementById('submissionsBody');
+
+            if (submissions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <h3>No submissions found</h3>
+                                <p>No customer submissions match your filters.</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = submissions.map(sub => {
+                const date = new Date(sub.created_at);
+                const formattedDate = date.toLocaleDateString();
+                const formattedTime = date.toLocaleTimeString();
+
+                // Count provided accounts
+                const accounts = [];
+                if (sub.usdt_wallet) accounts.push('USDT');
+                if (sub.evc_plus_number) accounts.push('EVC+');
+                if (sub.xbet_id) accounts.push('1xBet');
+                if (sub.melbet_id) accounts.push('Melbet');
+                if (sub.moneygo_wallet) accounts.push('MoneyGo');
+                if (sub.edahap_number) accounts.push('Edahap');
+                if (sub.premier_wallet) accounts.push('Premier');
+
+                return `
+                    <tr>
+                        <td>#${sub.id}</td>
+                        <td>${formattedDate}<br><small>${formattedTime}</small></td>
+                        <td>${sub.customer_name}</td>
+                        <td>${sub.customer_phone}</td>
+                        <td>${sub.customer_email}</td>
+                        <td>${accounts.join(', ')}</td>
+                        <td><span class="status-badge status-${sub.status}">${sub.status.toUpperCase()}</span></td>
+                        <td>
+                            <button class="view-btn action-btn" onclick="viewSubmission(${sub.id})">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Filter submissions
+        function filterSubmissions() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+
+            let filtered = allSubmissions;
+
+            // Filter by status
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(s => s.status === statusFilter);
+            }
+
+            // Filter by date
+            if (dateFilter) {
+                filtered = filtered.filter(s => {
+                    const subDate = new Date(s.created_at).toISOString().split('T')[0];
+                    return subDate === dateFilter;
+                });
+            }
+
+            displaySubmissions(filtered);
+        }
+
+        // View submission details
+        async function viewSubmission(id) {
+            currentSubmissionId = id;
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/submissions/${id}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const sub = data.submission;
+                    const date = new Date(sub.created_at);
+
+                    let accountsHtml = '';
+                    if (sub.usdt_wallet) accountsHtml += `<div class="account-item"><strong>USDT Wallet:</strong> ${sub.usdt_wallet}</div>`;
+                    if (sub.evc_plus_number) accountsHtml += `<div class="account-item"><strong>EVC Plus Number:</strong> ${sub.evc_plus_number}</div>`;
+                    if (sub.xbet_id) accountsHtml += `<div class="account-item"><strong>1xBet ID:</strong> ${sub.xbet_id}</div>`;
+                    if (sub.melbet_id) accountsHtml += `<div class="account-item"><strong>Melbet ID:</strong> ${sub.melbet_id}</div>`;
+                    if (sub.moneygo_wallet) accountsHtml += `<div class="account-item"><strong>MoneyGo U Wallet:</strong> ${sub.moneygo_wallet}</div>`;
+                    if (sub.edahap_number) accountsHtml += `<div class="account-item"><strong>Edahap Number:</strong> ${sub.edahap_number}</div>`;
+                    if (sub.premier_wallet) accountsHtml += `<div class="account-item"><strong>Premier Wallet:</strong> ${sub.premier_wallet}</div>`;
+
+                    document.getElementById('modalBody').innerHTML = `
+                        <div class="detail-section">
+                            <h3>Submission Information</h3>
+                            <div class="detail-row">
+                                <div class="detail-label">Submission ID:</div>
+                                <div class="detail-value">#${sub.id}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Status:</div>
+                                <div class="detail-value"><span class="status-badge status-${sub.status}">${sub.status.toUpperCase()}</span></div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Submitted:</div>
+                                <div class="detail-value">${date.toLocaleString()}</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <h3>Customer Information</h3>
+                            <div class="detail-row">
+                                <div class="detail-label">Name:</div>
+                                <div class="detail-value">${sub.customer_name}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Phone:</div>
+                                <div class="detail-value">${sub.customer_phone}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Email:</div>
+                                <div class="detail-value">${sub.customer_email}</div>
+                            </div>
+                        </div>
+
+                        <div class="detail-section">
+                            <h3>Account Details</h3>
+                            ${accountsHtml}
+                        </div>
+
+                        ${sub.notes ? `
+                        <div class="detail-section">
+                            <h3>Additional Notes</h3>
+                            <div class="account-item">${sub.notes}</div>
+                        </div>
+                        ` : ''}
+                    `;
+
+                    document.getElementById('modalStatusSelect').value = sub.status;
+                    document.getElementById('viewModal').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading submission:', error);
+                alert('Error loading submission details');
+            }
+        }
+
+        // Update status
+        async function updateStatus() {
+            const newStatus = document.getElementById('modalStatusSelect').value;
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/submissions/${currentSubmissionId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Status updated successfully!');
+                    closeModal();
+                    loadSubmissions();
+                } else {
+                    alert('Failed to update status');
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+                alert('Error updating status');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('viewModal').style.display = 'none';
+            currentSubmissionId = null;
+        }
+
+        // Export to CSV
+        function exportToCSV() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+
+            let filtered = allSubmissions;
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(s => s.status === statusFilter);
+            }
+            if (dateFilter) {
+                filtered = filtered.filter(s => {
+                    const subDate = new Date(s.created_at).toISOString().split('T')[0];
+                    return subDate === dateFilter;
+                });
+            }
+
+            const headers = ['ID', 'Date', 'Name', 'Phone', 'Email', 'USDT Wallet', 'EVC Plus', '1xBet ID', 'Melbet ID', 'MoneyGo', 'Edahap', 'Premier', 'Notes', 'Status'];
+            const rows = filtered.map(sub => [
+                sub.id,
+                new Date(sub.created_at).toLocaleString(),
+                sub.customer_name,
+                sub.customer_phone,
+                sub.customer_email,
+                sub.usdt_wallet || '',
+                sub.evc_plus_number || '',
+                sub.xbet_id || '',
+                sub.melbet_id || '',
+                sub.moneygo_wallet || '',
+                sub.edahap_number || '',
+                sub.premier_wallet || '',
+                sub.notes || '',
+                sub.status
+            ]);
+
+            let csv = headers.join(',') + '\n';
+            csv += rows.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `submissions_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        // Event listeners
+        document.getElementById('statusFilter').addEventListener('change', filterSubmissions);
+        document.getElementById('dateFilter').addEventListener('change', filterSubmissions);
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('viewModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        // Load data on page load
+        loadSubmissions();
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadSubmissions, 30000);
+    </script>
+</body>
+</html>

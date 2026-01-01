@@ -1,0 +1,255 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                  QARAN EXCHANGE WEBSITE                       ║
+║              CUSTOMIZATION CHECKLIST                          ║
+╚═══════════════════════════════════════════════════════════════╝
+
+🎯 ESSENTIAL (Must Do Before Launch)
+═══════════════════════════════════════════════════════════════
+
+1. ADD YOUR LOGO
+   Location: images/logo.png
+   Size: 200x50 pixels (or proportional)
+   Format: PNG (with transparent background recommended)
+   
+   ☐ Logo file added
+   ☐ Logo displays correctly on all pages
+   
+───────────────────────────────────────────────────────────────
+
+2. ADD SERVICE IMAGES
+   Location: images/ folder
+   
+   ☐ about-img.jpg (800x600px) - About Us page
+   ☐ money-transfer.jpg (800x600px) - Money Transfer service
+   ☐ currency-exchange.jpg (800x600px) - Currency Exchange
+   ☐ digital-currency.jpg (800x600px) - Digital Currency
+   
+───────────────────────────────────────────────────────────────
+
+3. UPDATE CONTACT INFORMATION
+   Files to edit: ALL HTML files (footer section)
+   
+   Current Placeholders → Your Information:
+   
+   ☐ Phone: +252 XX XXX XXXX → Your actual number
+   ☐ Email: info@qaranexchange.com → Your actual email
+   ☐ Address: Update Mogadishu location details
+   
+   Locations in each file:
+   • Footer section (bottom of page)
+   • Contact page (main content area)
+   
+───────────────────────────────────────────────────────────────
+
+4. UPDATE SOCIAL MEDIA LINKS
+   Files to edit: ALL HTML files (footer section)
+   
+   Find: <div class="social-links">
+   
+   ☐ Facebook URL
+   ☐ Twitter URL  
+   ☐ Instagram URL
+   ☐ LinkedIn URL
+   ☐ WhatsApp (if desired)
+   
+───────────────────────────────────────────────────────────────
+
+5. UPDATE GOOGLE MAPS LOCATION
+   File: contact.html (line ~140)
+   
+   Find: <iframe src="https://www.google.com/maps/embed...
+   
+   ☐ Replace with your actual business location
+   
+   How to get your map:
+   1. Go to Google Maps
+   2. Find your location
+   3. Click "Share" → "Embed a map"
+   4. Copy the iframe code
+   5. Replace the existing iframe in contact.html
+
+═══════════════════════════════════════════════════════════════
+
+📝 OPTIONAL (Recommended Customizations)
+═══════════════════════════════════════════════════════════════
+
+6. CUSTOMIZE BRAND COLORS
+   File: css/styles.css (lines 2-9)
+   
+   Current colors:
+   --primary-color: #1a73e8 (Blue)
+   --secondary-color: #34a853 (Green)
+   --accent-color: #fbbc04 (Yellow)
+   
+   ☐ Update to match your brand colors
+   
+───────────────────────────────────────────────────────────────
+
+7. CUSTOMIZE BUSINESS HOURS
+   File: contact.html
+   
+   Find: data-translate="contact_hours"
+   
+   Current:
+   Mon - Fri: 8:00 AM - 6:00 PM
+   Sat: 9:00 AM - 4:00 PM
+   Sun: Closed
+   
+   ☐ Update to your actual hours
+   
+───────────────────────────────────────────────────────────────
+
+8. ADD SPECIFIC DESTINATIONS
+   File: services.html
+   
+   Update popular destinations to match your actual services:
+   
+   ☐ Countries you serve
+   ☐ Supported currencies
+   ☐ Digital currencies offered
+   
+───────────────────────────────────────────────────────────────
+
+9. CUSTOMIZE STATISTICS
+   File: about.html
+   
+   Find: <div class="stats-section">
+   
+   Current:
+   • 50K+ Happy Customers
+   • 100+ Countries Served
+   • $50M+ Money Transferred
+   
+   ☐ Update with your actual numbers
+   
+───────────────────────────────────────────────────────────────
+
+10. ENHANCE CONTACT FORM
+    File: js/main.js (line ~60)
+    
+    Current: Simulated submission
+    
+    ☐ Integrate with email service (Formspree, EmailJS)
+    ☐ Or connect to your backend API
+    ☐ Add CAPTCHA (Google reCAPTCHA recommended)
+    
+───────────────────────────────────────────────────────────────
+
+11. ENHANCE CHAT FUNCTIONALITY
+    File: js/chat.js
+    
+    Current: Automated responses
+    
+    ☐ Integrate Tawk.to (free live chat)
+    ☐ Or Intercom, LiveChat, Zendesk
+    ☐ Or build custom backend chat
+    
+═══════════════════════════════════════════════════════════════
+
+🔍 TESTING CHECKLIST
+═══════════════════════════════════════════════════════════════
+
+Before launching, test:
+
+FUNCTIONALITY:
+☐ All navigation links work
+☐ Mobile menu opens/closes
+☐ Language switcher (EN ↔ SO)
+☐ Contact form validation
+☐ Chat interface works
+☐ All buttons clickable
+☐ Scroll-to-top button appears
+
+VISUAL:
+☐ Logo displays correctly
+☐ All images load
+☐ No broken images
+☐ Colors look good
+☐ Text is readable
+
+DEVICES:
+☐ Desktop (Chrome)
+☐ Desktop (Firefox)
+☐ Desktop (Edge/Safari)
+☐ Tablet (iPad or similar)
+☐ Mobile (iPhone or Android)
+
+CONTENT:
+☐ No placeholder text remains
+☐ All contact info updated
+☐ Social media links work
+☐ No "lorem ipsum" text
+☐ Somali translations correct
+
+═══════════════════════════════════════════════════════════════
+
+📤 DEPLOYMENT CHECKLIST
+═══════════════════════════════════════════════════════════════
+
+BEFORE UPLOAD:
+☐ All customizations complete
+☐ All testing done
+☐ Images optimized (compressed)
+☐ Remove image-guidelines.html (optional)
+☐ Remove this checklist file (optional)
+
+UPLOAD TO HOST:
+☐ Upload all HTML files
+☐ Upload css/ folder
+☐ Upload js/ folder  
+☐ Upload images/ folder
+☐ Maintain folder structure
+
+AFTER UPLOAD:
+☐ Test live site
+☐ Check all pages load
+☐ Verify images display
+☐ Test on mobile device
+☐ Check SSL certificate (HTTPS)
+☐ Set up Google Analytics (optional)
+
+═══════════════════════════════════════════════════════════════
+
+🎉 LAUNCH!
+═══════════════════════════════════════════════════════════════
+
+Once all checks are complete:
+
+☐ Announce on social media
+☐ Share with customers
+☐ Add to business cards
+☐ Update email signatures
+☐ Submit to search engines (Google, Bing)
+
+═══════════════════════════════════════════════════════════════
+
+💡 QUICK TIPS
+═══════════════════════════════════════════════════════════════
+
+• Use "Find and Replace" in your text editor to update:
+  - Phone numbers across all files
+  - Email addresses across all files
+  - Company name variations
+
+• Keep a backup of original files before making changes
+
+• Test locally before uploading to live server
+
+• Use browser DevTools (F12) to debug issues
+
+• Compress images with TinyPNG.com before uploading
+
+• Keep file and folder names lowercase and without spaces
+
+═══════════════════════════════════════════════════════════════
+
+Need help? Refer to:
+• SETUP_GUIDE.md - Quick start guide
+• README.md - Technical documentation
+• image-guidelines.html - Image specifications
+
+═══════════════════════════════════════════════════════════════
+
+Your Qaran Exchange website is ready to succeed! 🚀
+
+═══════════════════════════════════════════════════════════════

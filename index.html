@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Qaran Exchange - Your trusted partner for money transfers and digital currency exchange">
+    <title>Qaran Exchange - Money Transfer & Currency Exchange</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="images/logo.jpg" alt="Qaran Exchange Logo" class="logo-img">
+                    <span class="logo-text">Qaran Exchange</span>
+                </div>
+                
+                <div class="nav-menu" id="navMenu">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link active" data-translate="nav_home">Home</a></li>
+                        <li><a href="about.html" class="nav-link" data-translate="nav_about">About Us</a></li>
+                        <li><a href="services.html" class="nav-link" data-translate="nav_services">Services</a></li>
+                        <li><a href="payment.html" class="nav-link"><i class="fas fa-money-bill-wave"></i> Make Payment</a></li>
+                        <li><a href="submit-details.html" class="nav-link"><i class="fas fa-clipboard-list"></i> Submit Details</a></li>
+                        <li><a href="contact.html" class="nav-link" data-translate="nav_contact">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-actions">
+                    <div class="auth-buttons" id="authButtons">
+                        <a href="login.html" class="btn-login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span data-translate="nav_login">Login</span>
+                        </a>
+                        <a href="register.html" class="btn-register">
+                            <i class="fas fa-user-plus"></i>
+                            <span data-translate="nav_register">Register</span>
+                        </a>
+                    </div>
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <button class="user-btn" id="userBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userNameNav">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+                            <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                    <div class="language-switcher">
+                        <button class="lang-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">EN</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button class="lang-option" data-lang="en">English</button>
+                            <button class="lang-option" data-lang="so">Somali</button>
+                        </div>
+                    </div>
+                    <button class="mobile-toggle" id="mobileToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title" data-translate="hero_title">Fast & Secure Digital Wallet Exchange</h1>
+                <p class="hero-subtitle" data-translate="hero_subtitle">Exchange between EVC Plus, Zaad, Premier, USDT, and betting wallets instantly at the best rates</p>
+                <div class="hero-buttons">
+                    <a href="services.html" class="btn btn-primary" data-translate="hero_btn_primary">Start Exchanging</a>
+                    <a href="contact.html" class="btn btn-secondary" data-translate="hero_btn_secondary">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title" data-translate="features_title">Why Choose Qaran Exchange?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 data-translate="feature_secure_title">Secure Transactions</h3>
+                    <p data-translate="feature_secure_desc">Bank-level security with encrypted transfers to protect your money</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 data-translate="feature_fast_title">Fast Transfers</h3>
+                    <p data-translate="feature_fast_desc">Send money in minutes with our instant transfer service</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 data-translate="feature_rates_title">Best Rates</h3>
+                    <p data-translate="feature_rates_desc">Competitive exchange rates with transparent pricing</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 data-translate="feature_support_title">24/7 Support</h3>
+                    <p data-translate="feature_support_desc">Round-the-clock customer support in your language</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Preview -->
+    <section class="services-preview">
+        <div class="container">
+            <h2 class="section-title" data-translate="services_preview_title">Our Exchange Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3 data-translate="service_mobile_money">Mobile Money Exchange</h3>
+                    <p data-translate="service_mobile_money_desc">Exchange between EVC Plus, Zaad, Premier wallet, and more</p>
+                    <a href="services.html" class="service-link" data-translate="learn_more">Learn More →</a>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-dice"></i>
+                    <h3 data-translate="service_betting_wallets">Betting Wallet Exchange</h3>
+                    <p data-translate="service_betting_wallets_desc">Exchange with 1XBET, Melbet, and other betting platforms</p>
+                    <a href="services.html" class="service-link" data-translate="learn_more">Learn More →</a>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-coins"></i>
+                    <h3 data-translate="service_usdt_exchange">USDT Exchange</h3>
+                    <p data-translate="service_usdt_desc">Buy and sell USDT, exchange with mobile money platforms</p>
+                    <a href="services.html" class="service-link" data-translate="learn_more">Learn More →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trusted Platforms -->
+    <section class="trusted-platforms">
+        <div class="container">
+            <h2 class="section-title" data-translate="trusted_platforms_title">Trusted Platforms We Support</h2>
+            <div class="platforms-logo-grid-home">
+                <div class="platform-logo-item-home">
+                    <img src="images/platforms/evcplus.jpg" alt="EVC Plus">
+                </div>
+                <div class="platform-logo-item-home">
+                    <img src="images/platforms/zaad.jpg" alt="Zaad">
+                </div>
+                <div class="platform-logo-item-home">
+                    <img src="images/platforms/premier.jpg" alt="Premier Wallet">
+                </div>
+                <div class="platform-logo-item-home">
+                    <img src="images/platforms/1xbet.jpg" alt="1XBET">
+                </div>
+                <div class="platform-logo-item-home">
+                    <img src="images/platforms/melbet.jpg" alt="Melbet">
+                </div>
+                <div class="platform-logo-item-home">
+                    <img src="images/platforms/moneygo.jpg" alt="Moneygo">
+                </div>
+                <div class="platform-logo-item-home">
+                    <img src="images/platforms/edahap.jpg" alt="Edahap">
+                </div>
+                <div class="platform-logo-item-home">
+                    <img src="images/platforms/usdt.jpg" alt="USDT">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title" data-translate="how_it_works_title">How It Works</h2>
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 data-translate="step1_title">Select Platforms</h3>
+                    <p data-translate="step1_desc">Choose what you want to exchange from and to</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 data-translate="step2_title">Enter Amount</h3>
+                    <p data-translate="step2_desc">Input the amount you want to exchange</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 data-translate="step3_title">Confirm Exchange</h3>
+                    <p data-translate="step3_desc">Review rate and complete the exchange</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3 data-translate="step4_title">Receive Instantly!</h3>
+                    <p data-translate="step4_desc">Funds delivered to your wallet immediately</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 data-translate="cta_title">Ready to Get Started?</h2>
+                <p data-translate="cta_desc">Join thousands of satisfied customers who trust Qaran Exchange</p>
+                <a href="contact.html" class="btn btn-light" data-translate="cta_button">Start Sending Money</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Qaran Exchange</h3>
+                    <p data-translate="footer_desc">Your trusted partner for secure money transfers and currency exchange services.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-translate="footer_quick_links">Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html" data-translate="nav_home">Home</a></li>
+                        <li><a href="about.html" data-translate="nav_about">About Us</a></li>
+                        <li><a href="services.html" data-translate="nav_services">Services</a></li>
+                        <li><a href="contact.html" data-translate="nav_contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-translate="footer_services">Services</h4>
+                    <ul>
+                        <li><a href="services.html" data-translate="service_mobile_money">Mobile Money Exchange</a></li>
+                        <li><a href="services.html" data-translate="service_betting_wallets">Betting Wallet Exchange</a></li>
+                        <li><a href="services.html" data-translate="service_usdt_exchange">USDT Exchange</a></li>
+                        <li><a href="chat.html" data-translate="nav_chat">Chat Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-translate="footer_contact">Contact Info</h4>
+                    <ul class="contact-info">
+                        <li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/252612178241" style="color: inherit; text-decoration: none;">+252 61 217 8241</a></li>
+                        <li><i class="fas fa-envelope"></i> info@qaranexchange.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> <span data-translate="footer_location">Mogadishu, Somalia</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Qaran Exchange. <span data-translate="footer_rights">All rights reserved.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <button class="chat-bubble" id="chatBubble">
+            <i class="fas fa-comment"></i>
+        </button>
+    </div>
+
+    <script src="js/translations.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

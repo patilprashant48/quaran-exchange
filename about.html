@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About Qaran Exchange - Learn about our mission and commitment to excellence">
+    <title>About Us - Qaran Exchange</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="images/logo.jpg" alt="Qaran Exchange Logo" class="logo-img">
+                    <span class="logo-text">Qaran Exchange</span>
+                </div>
+                
+                <div class="nav-menu" id="navMenu">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link" data-translate="nav_home">Home</a></li>
+                        <li><a href="about.html" class="nav-link active" data-translate="nav_about">About Us</a></li>
+                        <li><a href="services.html" class="nav-link" data-translate="nav_services">Services</a></li>
+                        <li><a href="payment.html" class="nav-link"><i class="fas fa-money-bill-wave"></i> Make Payment</a></li>
+                        <li><a href="submit-details.html" class="nav-link"><i class="fas fa-clipboard-list"></i> Submit Details</a></li>
+                        <li><a href="contact.html" class="nav-link" data-translate="nav_contact">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-actions">
+                    <div class="auth-buttons" id="authButtons">
+                        <a href="login.html" class="btn-login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span data-translate="nav_login">Login</span>
+                        </a>
+                        <a href="register.html" class="btn-register">
+                            <i class="fas fa-user-plus"></i>
+                            <span data-translate="nav_register">Register</span>
+                        </a>
+                    </div>
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <button class="user-btn" id="userBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userNameNav">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+                            <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                    <div class="language-switcher">
+                        <button class="lang-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">EN</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button class="lang-option" data-lang="en">English</button>
+                            <button class="lang-option" data-lang="so">Somali</button>
+                        </div>
+                    </div>
+                    <button class="mobile-toggle" id="mobileToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 data-translate="about_page_title">About Qaran Exchange</h1>
+            <p data-translate="about_page_subtitle">Your trusted partner in money transfer and currency exchange</p>
+        </div>
+    </section>
+
+    <!-- About Content -->
+    <section class="about-content">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2 data-translate="about_who_we_are">Who We Are</h2>
+                    <p data-translate="about_intro">Qaran Exchange is a leading money transfer and currency exchange service dedicated to connecting people and communities across the globe. We specialize in providing fast, secure, and affordable transfer solutions for individuals and businesses.</p>
+                    <p data-translate="about_mission">Our mission is to make international money transfers accessible to everyone, regardless of location or financial background. We believe in transparent pricing, exceptional customer service, and leveraging technology to provide the best possible experience.</p>
+                </div>
+                <div class="about-image">
+                    <img src="images/about-img.jpg" alt="About Qaran Exchange">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section">
+        <div class="container">
+            <h2 class="section-title" data-translate="about_our_values">Our Core Values</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 data-translate="value_trust_title">Trust</h3>
+                    <p data-translate="value_trust_desc">We build lasting relationships through transparency and reliability</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3 data-translate="value_excellence_title">Excellence</h3>
+                    <p data-translate="value_excellence_desc">We strive for excellence in every transaction and interaction</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 data-translate="value_innovation_title">Innovation</h3>
+                    <p data-translate="value_innovation_desc">We continuously improve our services through technology</p>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 data-translate="value_community_title">Community</h3>
+                    <p data-translate="value_community_desc">We serve and support the communities we operate in</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label" data-translate="stat_customers">Happy Customers</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label" data-translate="stat_countries">Countries Served</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">$50M+</div>
+                    <div class="stat-label" data-translate="stat_transferred">Money Transferred</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label" data-translate="stat_support">Customer Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <div class="container">
+            <h2 class="section-title" data-translate="about_why_choose">Why Choose Us?</h2>
+            <div class="reasons-grid">
+                <div class="reason-item">
+                    <i class="fas fa-check-circle"></i>
+                    <h3 data-translate="reason_licensed_title">Licensed & Regulated</h3>
+                    <p data-translate="reason_licensed_desc">Fully licensed and compliant with international regulations</p>
+                </div>
+                <div class="reason-item">
+                    <i class="fas fa-check-circle"></i>
+                    <h3 data-translate="reason_competitive_title">Competitive Rates</h3>
+                    <p data-translate="reason_competitive_desc">Best exchange rates with no hidden fees</p>
+                </div>
+                <div class="reason-item">
+                    <i class="fas fa-check-circle"></i>
+                    <h3 data-translate="reason_speed_title">Fast Transfers</h3>
+                    <p data-translate="reason_speed_desc">Most transfers completed within minutes</p>
+                </div>
+                <div class="reason-item">
+                    <i class="fas fa-check-circle"></i>
+                    <h3 data-translate="reason_security_title">Bank-Level Security</h3>
+                    <p data-translate="reason_security_desc">Advanced encryption and fraud protection</p>
+                </div>
+                <div class="reason-item">
+                    <i class="fas fa-check-circle"></i>
+                    <h3 data-translate="reason_multilingual_title">Multilingual Support</h3>
+                    <p data-translate="reason_multilingual_desc">Support available in English and Somali</p>
+                </div>
+                <div class="reason-item">
+                    <i class="fas fa-check-circle"></i>
+                    <h3 data-translate="reason_convenient_title">Convenient Options</h3>
+                    <p data-translate="reason_convenient_desc">Multiple payment and delivery methods</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Qaran Exchange</h3>
+                    <p data-translate="footer_desc">Your trusted partner for secure money transfers and currency exchange services.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-translate="footer_quick_links">Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html" data-translate="nav_home">Home</a></li>
+                        <li><a href="about.html" data-translate="nav_about">About Us</a></li>
+                        <li><a href="services.html" data-translate="nav_services">Services</a></li>
+                        <li><a href="contact.html" data-translate="nav_contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-translate="footer_services">Services</h4>
+                    <ul>
+                        <li><a href="services.html" data-translate="service_mobile_money">Mobile Money Exchange</a></li>
+                        <li><a href="services.html" data-translate="service_betting_wallets">Betting Wallet Exchange</a></li>
+                        <li><a href="services.html" data-translate="service_usdt_exchange">USDT Exchange</a></li>
+                        <li><a href="chat.html" data-translate="nav_chat">Chat Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-translate="footer_contact">Contact Info</h4>
+                    <ul class="contact-info">
+                        <li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/252612178241" style="color: inherit; text-decoration: none;">+252 61 217 8241</a></li>
+                        <li><i class="fas fa-envelope"></i> info@qaranexchange.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> <span data-translate="footer_location">Mogadishu, Somalia</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Qaran Exchange. <span data-translate="footer_rights">All rights reserved.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <button class="chat-bubble" id="chatBubble">
+            <i class="fas fa-comment"></i>
+        </button>
+    </div>
+
+    <script src="js/translations.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

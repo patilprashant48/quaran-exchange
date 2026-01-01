@@ -1,0 +1,348 @@
+╔════════════════════════════════════════════════════════════════╗
+║          QARAN EXCHANGE - QUICK REFERENCE GUIDE                ║
+╚════════════════════════════════════════════════════════════════╝
+
+📁 FILE STRUCTURE AT A GLANCE
+══════════════════════════════════════════════════════════════════
+
+Qaran Exchange/
+│
+├── 📄 HTML Pages (5 files)
+│   ├── index.html ................. Home page
+│   ├── about.html ................. About Us
+│   ├── services.html .............. Services
+│   ├── contact.html ............... Contact
+│   └── chat.html .................. Chat Support
+│
+├── 📁 css/
+│   └── styles.css ................. All styling
+│
+├── 📁 js/
+│   ├── main.js .................... Core functionality
+│   ├── chat.js .................... Chat features
+│   └── translations.js ............ Language support
+│
+├── 📁 images/
+│   ├── logo.png ................... [ADD YOUR LOGO]
+│   ├── about-img.jpg .............. [ADD IMAGE]
+│   ├── money-transfer.jpg ......... [ADD IMAGE]
+│   ├── currency-exchange.jpg ...... [ADD IMAGE]
+│   └── digital-currency.jpg ....... [ADD IMAGE]
+│
+└── 📚 Documentation
+    ├── README.md .................. Technical guide
+    ├── SETUP_GUIDE.md ............. Quick setup
+    ├── CUSTOMIZATION_CHECKLIST.txt. What to customize
+    ├── PROJECT_SUMMARY.txt ........ Project overview
+    └── image-guidelines.html ...... Image specs
+
+══════════════════════════════════════════════════════════════════
+
+🌐 WEBSITE PAGES OVERVIEW
+══════════════════════════════════════════════════════════════════
+
+1. HOME (index.html)
+   • Hero section with call-to-action
+   • Features showcase (4 key benefits)
+   • Services preview (3 main services)
+   • How it works (4 steps)
+   • CTA section
+   
+2. ABOUT US (about.html)
+   • Company introduction
+   • Core values (4 values)
+   • Statistics section
+   • Why choose us (6 reasons)
+   
+3. SERVICES (services.html)
+   • Money Transfers (detailed)
+   • Currency Exchange (detailed)
+   • Digital Currency (detailed)
+   • Each with features & destinations
+   
+4. CONTACT (contact.html)
+   • Contact form (validated)
+   • Contact information cards
+   • Google Maps integration
+   • Social media links
+   
+5. CHAT SUPPORT (chat.html)
+   • Live chat interface
+   • Quick topic buttons
+   • FAQ section
+   • Automated responses
+
+══════════════════════════════════════════════════════════════════
+
+🎨 CUSTOMIZATION QUICK REFERENCE
+══════════════════════════════════════════════════════════════════
+
+TO CHANGE:                    EDIT FILE:              LINE/SECTION:
+────────────────────────────────────────────────────────────────
+Logo                          images/logo.png          (replace file)
+Brand colors                  css/styles.css           Lines 2-9
+Phone number                  All HTML files           Footer section
+Email address                 All HTML files           Footer section
+Physical address              All HTML files           Footer + contact.html
+Social media links            All HTML files           Footer section
+Business hours               contact.html              Contact info cards
+Google Maps location         contact.html              Map section
+Company statistics           about.html                Stats section
+Service destinations         services.html             Service detail cards
+Chat responses               js/chat.js                chatResponses object
+Translations                 js/translations.js        translations object
+
+══════════════════════════════════════════════════════════════════
+
+🔧 COMMON TASKS
+══════════════════════════════════════════════════════════════════
+
+ADD YOUR LOGO:
+1. Save logo as "logo.png" (200x50px recommended)
+2. Place in images/ folder
+3. Refresh website
+
+CHANGE BRAND COLOR:
+1. Open css/styles.css
+2. Find --primary-color (around line 3)
+3. Change #1a73e8 to your color
+4. Save and refresh
+
+UPDATE PHONE NUMBER:
+1. Use Find & Replace in all HTML files
+2. Find: +252 XX XXX XXXX
+3. Replace with: your actual number
+4. Save all files
+
+ADD SOCIAL MEDIA:
+1. Find <div class="social-links"> in any HTML file
+2. Replace # with your actual URLs
+3. Example: <a href="https://facebook.com/yourpage">
+4. Save file
+
+SWITCH LANGUAGE:
+1. Click globe icon (🌐) in navigation
+2. Select EN (English) or SO (Somali)
+3. Selection is automatically saved
+
+══════════════════════════════════════════════════════════════════
+
+🌍 LANGUAGE SUPPORT
+══════════════════════════════════════════════════════════════════
+
+SUPPORTED LANGUAGES:
+✅ English (EN) - Complete
+✅ Somali (SO) - Complete
+
+HOW IT WORKS:
+• Click globe icon to switch
+• Saved in browser (persists on reload)
+• All text updates automatically
+• Both languages fully translated
+
+TO ADD NEW LANGUAGE:
+1. Edit js/translations.js
+2. Add new language object (copy en: structure)
+3. Translate all text strings
+4. Add language option to dropdown in HTML
+
+══════════════════════════════════════════════════════════════════
+
+📱 RESPONSIVE DESIGN
+══════════════════════════════════════════════════════════════════
+
+BREAKPOINTS:
+• Mobile:  320px - 767px
+• Tablet:  768px - 1199px
+• Desktop: 1200px+
+
+FEATURES:
+✅ Mobile hamburger menu
+✅ Touch-friendly buttons
+✅ Responsive images
+✅ Flexible grids
+✅ Readable text on all sizes
+
+TEST ON:
+• Chrome DevTools (F12 → Toggle Device)
+• Real mobile device
+• iPad/Tablet
+• Different browsers
+
+══════════════════════════════════════════════════════════════════
+
+🔍 TROUBLESHOOTING
+══════════════════════════════════════════════════════════════════
+
+ISSUE: Images not showing
+FIX: 
+  • Check file names match exactly
+  • Verify files are in images/ folder
+  • File extensions correct (.jpg, .png)
+  • Try clearing browser cache (Ctrl+F5)
+
+ISSUE: Language switcher not working
+FIX:
+  • Check all 3 JS files are loaded
+  • Open browser console (F12) for errors
+  • Verify translations.js loaded first
+
+ISSUE: Mobile menu not working
+FIX:
+  • Ensure main.js is loading
+  • Check for JavaScript errors (F12)
+  • Clear cache and hard refresh
+
+ISSUE: Contact form not working
+FIX:
+  • Form is currently demo mode
+  • Needs backend integration
+  • See README.md for integration options
+
+══════════════════════════════════════════════════════════════════
+
+⚡ PERFORMANCE TIPS
+══════════════════════════════════════════════════════════════════
+
+OPTIMIZE IMAGES:
+• Compress with TinyPNG.com or Squoosh.app
+• Keep images under 500KB each
+• Use correct dimensions (don't resize with HTML)
+
+SPEED UP LOADING:
+• Minify CSS and JS for production
+• Enable GZIP compression on server
+• Use browser caching
+• Consider CDN for large traffic
+
+BROWSER CACHING:
+• Add .htaccess rules (Apache)
+• Set cache headers on server
+• Improves repeat visit speed
+
+══════════════════════════════════════════════════════════════════
+
+🚀 DEPLOYMENT OPTIONS
+══════════════════════════════════════════════════════════════════
+
+FREE HOSTING:
+┌──────────────────────────────────────────────────┐
+│ Netlify (Recommended)                             │
+│ • Drag & drop deployment                          │
+│ • Free SSL certificate                            │
+│ • Custom domain support                           │
+│ • Easy to update                                  │
+│ URL: netlify.com                                  │
+└──────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────┐
+│ GitHub Pages                                      │
+│ • Free hosting from GitHub                        │
+│ • Good for static sites                           │
+│ • Version control included                        │
+│ URL: pages.github.com                             │
+└──────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────┐
+│ Vercel                                            │
+│ • Fast deployment                                 │
+│ • Free SSL                                        │
+│ • Good performance                                │
+│ URL: vercel.com                                   │
+└──────────────────────────────────────────────────┘
+
+TRADITIONAL HOSTING:
+• Upload via FTP to cPanel
+• Works with any web host
+• Bluehost, HostGator, GoDaddy, etc.
+
+══════════════════════════════════════════════════════════════════
+
+📊 SEO BASICS
+══════════════════════════════════════════════════════════════════
+
+ALREADY INCLUDED:
+✅ Semantic HTML structure
+✅ Meta descriptions
+✅ Proper heading hierarchy
+✅ Alt text ready for images
+✅ Mobile-friendly (Google requirement)
+
+TO IMPROVE SEO:
+☐ Add your logo alt text
+☐ Add descriptive alt text to all images
+☐ Submit sitemap to Google Search Console
+☐ Add Google Analytics
+☐ Create social media meta tags
+☐ Register business on Google My Business
+
+══════════════════════════════════════════════════════════════════
+
+🔐 SECURITY CHECKLIST
+══════════════════════════════════════════════════════════════════
+
+BEFORE GOING LIVE:
+☐ Enable HTTPS/SSL (usually free from host)
+☐ Add CAPTCHA to contact form
+☐ Secure backend for form submissions
+☐ Keep software/dependencies updated
+☐ Regular backups
+☐ Use strong passwords for hosting
+
+══════════════════════════════════════════════════════════════════
+
+📞 SUPPORT & RESOURCES
+══════════════════════════════════════════════════════════════════
+
+INCLUDED DOCUMENTATION:
+📖 README.md ..................... Full technical docs
+📖 SETUP_GUIDE.md ................ Quick start guide  
+📖 CUSTOMIZATION_CHECKLIST.txt ... What to customize
+📖 PROJECT_SUMMARY.txt ........... Complete overview
+📖 image-guidelines.html ......... Image specifications
+
+FREE RESOURCES:
+🖼️  Images: unsplash.com, pexels.com
+🎨 Colors: coolors.co
+📝 Icons: fontawesome.com
+🔧 Tools: tinypng.com (compress images)
+
+LEARNING:
+📚 HTML: developer.mozilla.org
+📚 CSS: css-tricks.com
+📚 JavaScript: javascript.info
+
+══════════════════════════════════════════════════════════════════
+
+✅ PRE-LAUNCH CHECKLIST (Essential)
+══════════════════════════════════════════════════════════════════
+
+☐ Logo added
+☐ All 4 service images added
+☐ Phone number updated (all pages)
+☐ Email updated (all pages)
+☐ Address updated
+☐ Social media links updated
+☐ Tested on mobile device
+☐ Tested language switching
+☐ All navigation links work
+☐ Contact form tested
+☐ Images compressed/optimized
+
+══════════════════════════════════════════════════════════════════
+
+🎉 READY TO LAUNCH!
+══════════════════════════════════════════════════════════════════
+
+Your Qaran Exchange website is professional, modern, and ready
+to serve your customers in both English and Somali!
+
+Good luck with your business! 🚀
+
+══════════════════════════════════════════════════════════════════
+
+Last Updated: January 1, 2026
+Version: 1.0
+Status: Production Ready ✅
+
+══════════════════════════════════════════════════════════════════

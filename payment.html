@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Make Payment - Qaran Exchange">
+    <title>Make Payment - Qaran Exchange</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .payment-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 2rem 0;
+        }
+        .payment-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        .payment-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--dark-color);
+        }
+        .payment-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .payment-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .payment-method {
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+        .payment-method:hover {
+            border-color: var(--primary-color);
+            background: rgba(26, 115, 232, 0.05);
+        }
+        .payment-method.selected {
+            border-color: var(--primary-color);
+            background: rgba(26, 115, 232, 0.1);
+        }
+        .payment-method img {
+            height: 40px;
+            width: auto;
+            margin-bottom: 0.5rem;
+        }
+        .payment-method i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .payment-method span {
+            display: block;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.95rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .amount-input-wrapper {
+            position: relative;
+        }
+        .currency-symbol {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        .amount-input-wrapper input {
+            padding-left: 2.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .payment-summary {
+            background: var(--light-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+        .summary-row.total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            padding-top: 1rem;
+            border-top: 2px solid var(--border-color);
+            margin-bottom: 0;
+        }
+        .btn-pay {
+            width: 100%;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+        }
+        .btn-pay:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(26, 115, 232, 0.4);
+        }
+        .btn-pay:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        .alert.show {
+            display: block;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info-box {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #0c5460;
+        }
+        .info-box i {
+            margin-right: 0.5rem;
+        }
+        @media (max-width: 768px) {
+            .payment-card {
+                padding: 1.5rem;
+            }
+            .payment-methods {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="images/logo.jpg" alt="Qaran Exchange Logo" class="logo-img">
+                    <span class="logo-text">Qaran Exchange</span>
+                </div>
+                
+                <div class="nav-menu" id="navMenu">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link" data-translate="nav_home">Home</a></li>
+                        <li><a href="about.html" class="nav-link" data-translate="nav_about">About Us</a></li>
+                        <li><a href="services.html" class="nav-link" data-translate="nav_services">Services</a></li>
+                        <li><a href="payment.html" class="nav-link active">Make Payment</a></li>
+                        <li><a href="contact.html" class="nav-link" data-translate="nav_contact">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-actions">
+                    <div class="auth-buttons" id="authButtons">
+                        <a href="login.html" class="btn-login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span data-translate="nav_login">Login</span>
+                        </a>
+                        <a href="register.html" class="btn-register">
+                            <i class="fas fa-user-plus"></i>
+                            <span data-translate="nav_register">Register</span>
+                        </a>
+                    </div>
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <button class="user-btn" id="userBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userNameNav">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+                            <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                    <div class="language-switcher">
+                        <button class="lang-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">EN</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button class="lang-option" data-lang="en">English</button>
+                            <button class="lang-option" data-lang="so">Somali</button>
+                        </div>
+                    </div>
+                    <button class="mobile-toggle" id="mobileToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="payment-container">
+        <div class="payment-wrapper">
+            <div class="payment-header">
+                <h1><i class="fas fa-money-bill-wave"></i> Make a Payment</h1>
+                <p>Complete your exchange transaction securely</p>
+            </div>
+
+            <div id="alertBox" class="alert"></div>
+
+            <div class="payment-card">
+                <h2 class="section-title"><i class="fas fa-wallet"></i> Select Payment Method</h2>
+                
+                <div class="payment-methods" id="paymentMethods">
+                    <div class="payment-method" data-method="evcplus">
+                        <img src="images/platforms/evcplus.jpg" alt="EVC Plus">
+                        <span>EVC Plus</span>
+                    </div>
+                    <div class="payment-method" data-method="zaad">
+                        <img src="images/platforms/zaad.jpg" alt="Zaad">
+                        <span>Zaad</span>
+                    </div>
+                    <div class="payment-method" data-method="premier">
+                        <img src="images/platforms/premier.jpg" alt="Premier">
+                        <span>Premier</span>
+                    </div>
+                    <div class="payment-method" data-method="usdt">
+                        <img src="images/platforms/usdt.jpg" alt="USDT">
+                        <span>USDT</span>
+                    </div>
+                    <div class="payment-method" data-method="moneygo">
+                        <img src="images/platforms/moneygo.jpg" alt="MoneyGo">
+                        <span>MoneyGo</span>
+                    </div>
+                    <div class="payment-method" data-method="edahap">
+                        <img src="images/platforms/edahap.jpg" alt="Edahap">
+                        <span>Edahap</span>
+                    </div>
+                    <div class="payment-method" data-method="1xbet">
+                        <img src="images/platforms/1xbet.jpg" alt="1XBET">
+                        <span>1XBET</span>
+                    </div>
+                    <div class="payment-method" data-method="melbet">
+                        <img src="images/platforms/melbet.jpg" alt="Melbet">
+                        <span>Melbet</span>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Note:</strong> Please select your preferred payment method before proceeding.
+                </div>
+            </div>
+
+            <form id="paymentForm">
+                <div class="payment-card">
+                    <h2 class="section-title"><i class="fas fa-dollar-sign"></i> Payment Details</h2>
+
+                    <div class="form-group">
+                        <label for="amount">Amount *</label>
+                        <div class="amount-input-wrapper">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" id="amount" name="amount" required 
+                                   placeholder="0.00" min="1" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exchangeType">Exchange Type *</label>
+                        <select id="exchangeType" name="exchangeType" required>
+                            <option value="">Select exchange type...</option>
+                            <option value="mobile-to-mobile">Mobile Money to Mobile Money</option>
+                            <option value="mobile-to-usdt">Mobile Money to USDT</option>
+                            <option value="usdt-to-mobile">USDT to Mobile Money</option>
+                            <option value="betting-wallet">Betting Wallet Exchange</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="senderAccount">Sender Account/Wallet *</label>
+                            <input type="text" id="senderAccount" name="senderAccount" required
+                                   placeholder="Your account number or wallet address">
+                        </div>
+                        <div class="form-group">
+                            <label for="receiverAccount">Receiver Account/Wallet *</label>
+                            <input type="text" id="receiverAccount" name="receiverAccount" required
+                                   placeholder="Destination account number or wallet">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-card">
+                    <h2 class="section-title"><i class="fas fa-user"></i> Customer Information</h2>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required
+                                   placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" required
+                                   placeholder="+252 XX XXX XXXX">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email"
+                               placeholder="your.email@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Additional Notes (Optional)</label>
+                        <textarea id="notes" name="notes" rows="3"
+                                  placeholder="Any special instructions or notes..."></textarea>
+                    </div>
+                </div>
+
+                <div class="payment-card">
+                    <h2 class="section-title"><i class="fas fa-receipt"></i> Payment Summary</h2>
+
+                    <div class="payment-summary">
+                        <div class="summary-row">
+                            <span>Payment Method:</span>
+                            <strong id="summaryMethod">Not selected</strong>
+                        </div>
+                        <div class="summary-row">
+                            <span>Amount:</span>
+                            <strong id="summaryAmount">$0.00</strong>
+                        </div>
+                        <div class="summary-row">
+                            <span>Service Fee:</span>
+                            <strong id="summaryFee">$0.00</strong>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total Amount:</span>
+                            <strong id="summaryTotal">$0.00</strong>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-pay" id="submitBtn">
+                        <i class="fas fa-lock"></i> Complete Payment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/translations.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        let selectedMethod = null;
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const form = document.getElementById('paymentForm');
+        const amountInput = document.getElementById('amount');
+        const submitBtn = document.getElementById('submitBtn');
+        const alertBox = document.getElementById('alertBox');
+
+        // Payment method selection
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', () => {
+                paymentMethods.forEach(m => m.classList.remove('selected'));
+                method.classList.add('selected');
+                selectedMethod = method.dataset.method;
+                updateSummary();
+            });
+        });
+
+        // Update summary on amount change
+        amountInput.addEventListener('input', updateSummary);
+
+        function updateSummary() {
+            const amount = parseFloat(amountInput.value) || 0;
+            const fee = amount * 0.02; // 2% service fee
+            const total = amount + fee;
+
+            document.getElementById('summaryMethod').textContent = 
+                selectedMethod ? selectedMethod.toUpperCase() : 'Not selected';
+            document.getElementById('summaryAmount').textContent = `$${amount.toFixed(2)}`;
+            document.getElementById('summaryFee').textContent = `$${fee.toFixed(2)}`;
+            document.getElementById('summaryTotal').textContent = `$${total.toFixed(2)}`;
+        }
+
+        // Show alert
+        function showAlert(message, type) {
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type} show`;
+            alertBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setTimeout(() => {
+                alertBox.className = 'alert';
+            }, 5000);
+        }
+
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!selectedMethod) {
+                showAlert('Please select a payment method', 'error');
+                return;
+            }
+
+            const amount = parseFloat(amountInput.value);
+            const fee = amount * 0.02;
+            const total = amount + fee;
+
+            const paymentData = {
+                paymentMethod: selectedMethod,
+                amount: amount,
+                fee: fee,
+                totalAmount: total,
+                exchangeType: document.getElementById('exchangeType').value,
+                senderAccount: document.getElementById('senderAccount').value,
+                receiverAccount: document.getElementById('receiverAccount').value,
+                customerName: document.getElementById('fullName').value,
+                customerPhone: document.getElementById('phone').value,
+                customerEmail: document.getElementById('email').value,
+                notes: document.getElementById('notes').value
+            };
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                const response = await fetch('/api/payments/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(paymentData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Store payment ID for receipt page
+                    localStorage.setItem('paymentId', data.paymentId);
+                    // Redirect to confirmation page
+                    window.location.href = 'payment-confirmation.html';
+                } else {
+                    showAlert(data.error || 'Payment failed. Please try again.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-lock"></i> Complete Payment';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('An error occurred. Please try again.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-lock"></i> Complete Payment';
+            }
+        });
+
+        // Pre-fill customer info if logged in
+        if (window.QaranAuth && window.QaranAuth.isAuthenticated()) {
+            const user = window.QaranAuth.getCurrentUser();
+            if (user) {
+                document.getElementById('fullName').value = user.name || '';
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('phone').value = user.phone || '';
+            }
+        }
+    </script>
+</body>
+</html>
