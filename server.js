@@ -935,20 +935,12 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Support running as a serverless function (Vercel) or as a normal server
-let serverInstance = null;
-if (process.env.VERCEL || process.env.SERVERLESS) {
-    // export handler for serverless platforms
-    try {
-        const serverless = require('serverless-http');
-        module.exports = serverless(app);
-        console.log('Running in serverless mode (exporting handler)');
-    } catch (err) {
-        console.error('serverless-http not installed or failed to load:', err.message);
-    }
-} else {
-    // Start server normally
-    serverInstance = app.listen(PORT, () => {
+// Export for serverless (Vercel)
+module.exports = app;
+
+// Start server if not in serverless environment
+if (require.main === module) {
+    const serverInstance = app.listen(PORT, () => {
         console.log(`🚀 Qaran Exchange server running on http://localhost:${PORT}`);
         console.log(`📧 Email configured: ${process.env.EMAIL_USER ? 'Yes' : 'No (using demo mode)'}`);
     });
@@ -959,7 +951,7 @@ if (process.env.VERCEL || process.env.SERVERLESS) {
             if (err) {
                 console.error(err.message);
             }
-            if (serverInstance) serverInstance.close();
+            serverInstance.close();
             console.log('\n👋 Qaran Exchange server closed');
             process.exit(0);
         });
