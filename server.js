@@ -12,12 +12,13 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Database setup
-const db = new sqlite3.Database('./database.db', (err) => {
+// Database setup - use in-memory database for Vercel (serverless), file-based for local
+const dbPath = process.env.VERCEL ? ':memory:' : './database.db';
+const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Error opening database:', err.message);
     } else {
-        console.log('Connected to SQLite database');
+        console.log(`Connected to SQLite database (${process.env.VERCEL ? 'in-memory for serverless' : 'file-based'})`);
         initializeDatabase();
     }
 });
