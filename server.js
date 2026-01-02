@@ -1,6 +1,6 @@
 const express = require('express');
 const session = require('express-session');
-const sqlite3 = require('sqlite3').verbose();
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const path = require('path');
@@ -9,92 +9,13 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
+const { connectDB, User, OTP, Payment, Submission } = require('./database');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Database setup - use in-memory database for Vercel (serverless), file-based for local
-const dbPath = process.env.VERCEL ? ':memory:' : './database.db';
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error('Error opening database:', err.message);
-    } else {
-        console.log(`Connected to SQLite database (${process.env.VERCEL ? 'in-memory for serverless' : 'file-based'})`);
-        initializeDatabase();
-    }
-});
-
-// Initialize database tables
-function initializeDatabase() {
-    db.run(`CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE,
-        phone TEXT UNIQUE,
-        password TEXT,
-        is_verified INTEGER DEFAULT 0,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        last_login DATETIME
-    )`);
-
-    db.run(`CREATE TABLE IF NOT EXISTS otp_codes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        code TEXT NOT NULL,
-        type TEXT NOT NULL,
-        expires_at DATETIME NOT NULL,
-        is_used INTEGER DEFAULT 0,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-    )`);
-
-    db.run(`CREATE TABLE IF NOT EXISTS sessions_table (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        session_token TEXT NOT NULL,
-        expires_at DATETIME NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-    )`);
-
-    db.run(`CREATE TABLE IF NOT EXISTS payments (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        transaction_id TEXT UNIQUE NOT NULL,
-        user_id INTEGER,
-        payment_method TEXT NOT NULL,
-        amount REAL NOT NULL,
-        fee REAL NOT NULL,
-        total_amount REAL NOT NULL,
-        exchange_type TEXT NOT NULL,
-        sender_account TEXT NOT NULL,
-        receiver_account TEXT NOT NULL,
-        customer_name TEXT NOT NULL,
-        customer_phone TEXT NOT NULL,
-        customer_email TEXT,
-        notes TEXT,
-        status TEXT DEFAULT 'completed',
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-    )`);
-
-    db.run(`CREATE TABLE IF NOT EXISTS customer_submissions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        customer_name TEXT NOT NULL,
-        customer_phone TEXT NOT NULL,
-        customer_email TEXT NOT NULL,
-        usdt_wallet TEXT,
-        evc_plus_number TEXT,
-        xbet_id TEXT,
-        melbet_id TEXT,
-        moneygo_wallet TEXT,
-        edahap_number TEXT,
-        premier_wallet TEXT,
-        notes TEXT,
-        status TEXT DEFAULT 'pending',
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (user_id) REFERENCES users(id)
-    )`);
-}
+// Connect to MongoDB
+connectDB();
 
 // Middleware
 app.use(helmet({
@@ -172,154 +93,143 @@ app.post('/api/register', async (req, res) => {
 
     try {
         // Check if user exists
-        const checkQuery = email 
-            ? 'SELECT * FROM users WHERE email = ?' 
-            : 'SELECT * FROM users WHERE phone = ?';
-        
-        db.get(checkQuery, [email || phone], async (err, row) => {
-            if (err) {
-                return res.status(500).json({ error: 'Database error' });
-            }
-            if (row) {
-                return res.status(400).json({ error: 'User already exists' });
-            }
+        const existingUser = await User.findOne(email ? { email } : { phone });
+        if (existingUser) {
+            return res.status(400).json({ error: 'User already exists' });
+        }
 
-            // Hash password if provided
-            const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
+        // Hash password if provided
+        const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
 
-            // Insert user
-            const insertQuery = `INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)`;
-            db.run(insertQuery, [name, email, phone, hashedPassword], function(err) {
-                if (err) {
-                    return res.status(500).json({ error: 'Failed to create user' });
-                }
-
-                const userId = this.lastID;
-
-                // Generate and send OTP
-                const otp = generateOTP();
-                const expiryMinutes = parseInt(process.env.OTP_EXPIRY_MINUTES) || 10;
-                const expiresAt = new Date(Date.now() + expiryMinutes * 60000).toISOString();
-
-                db.run(
-                    'INSERT INTO otp_codes (user_id, code, type, expires_at) VALUES (?, ?, ?, ?)',
-                    [userId, otp, email ? 'email' : 'sms', expiresAt],
-                    (err) => {
-                        if (err) {
-                            return res.status(500).json({ error: 'Failed to generate OTP' });
-                        }
-
-                        // Send OTP
-                        if (email) {
-                            sendOTPEmail(email, otp, name)
-                                .then(() => {
-                                    req.session.pendingUserId = userId;
-                                    res.json({ 
-                                        success: true, 
-                                        message: 'Registration successful. Please check your email for verification code.',
-                                        userId: userId,
-                                        verificationType: 'email'
-                                    });
-                                })
-                                .catch(err => {
-                                    console.error('Email error:', err);
-                                    res.json({ 
-                                        success: true, 
-                                        message: 'Registration successful. Your verification code is: ' + otp,
-                                        userId: userId,
-                                        verificationType: 'email',
-                                        otp: otp // For testing without email
-                                    });
-                                });
-                        } else {
-                            // For SMS, return OTP in response (in production, send via Twilio)
-                            req.session.pendingUserId = userId;
-                            res.json({ 
-                                success: true, 
-                                message: 'Registration successful. Your verification code is: ' + otp,
-                                userId: userId,
-                                verificationType: 'sms',
-                                otp: otp // In production, this would be sent via SMS
-                            });
-                        }
-                    }
-                );
-            });
+        // Create user
+        const user = await User.create({
+            name,
+            email: email || null,
+            phone: phone || null,
+            password: hashedPassword
         });
+
+        // Generate and send OTP
+        const otp = generateOTP();
+        const expiryMinutes = parseInt(process.env.OTP_EXPIRY_MINUTES) || 10;
+        const expiresAt = new Date(Date.now() + expiryMinutes * 60000);
+
+        await OTP.create({
+            user_id: user._id,
+            code: otp,
+            type: email ? 'email' : 'sms',
+            expires_at: expiresAt
+        });
+
+        // Send OTP
+        if (email) {
+            sendOTPEmail(email, otp, name)
+                .then(() => {
+                    req.session.pendingUserId = user._id.toString();
+                    res.json({ 
+                        success: true, 
+                        message: 'Registration successful. Please check your email for verification code.',
+                        userId: user._id.toString(),
+                        verificationType: 'email'
+                    });
+                })
+                .catch(err => {
+                    console.error('Email error:', err);
+                    res.json({ 
+                        success: true, 
+                        message: 'Registration successful. Your verification code is: ' + otp,
+                        userId: user._id.toString(),
+                        verificationType: 'email',
+                        otp: otp // For testing without email
+                    });
+                });
+        } else {
+            // For SMS, return OTP in response (in production, send via Twilio)
+            req.session.pendingUserId = user._id.toString();
+            res.json({ 
+                success: true, 
+                message: 'Registration successful. Your verification code is: ' + otp,
+                userId: user._id.toString(),
+                verificationType: 'sms',
+                otp: otp // In production, this would be sent via SMS
+            });
+        }
     } catch (error) {
+        console.error('Registration error:', error);
         res.status(500).json({ error: 'Server error' });
     }
 });
 
 // Verify OTP
-app.post('/api/verify-otp', (req, res) => {
+app.post('/api/verify-otp', async (req, res) => {
     const { userId, code } = req.body;
 
     if (!userId || !code) {
         return res.status(400).json({ error: 'User ID and code are required' });
     }
 
-    const query = `
-        SELECT * FROM otp_codes 
-        WHERE user_id = ? AND code = ? AND is_used = 0 
-        AND datetime(expires_at) > datetime('now')
-        ORDER BY created_at DESC LIMIT 1
-    `;
+    try {
+        // Find valid OTP
+        const otpRecord = await OTP.findOne({
+            user_id: userId,
+            code,
+            is_used: false,
+            expires_at: { $gt: new Date() }
+        }).sort({ created_at: -1 });
 
-    db.get(query, [userId, code], (err, row) => {
-        if (err) {
-            return res.status(500).json({ error: 'Database error' });
-        }
-        if (!row) {
+        if (!otpRecord) {
             return res.status(400).json({ error: 'Invalid or expired code' });
         }
 
         // Mark OTP as used
-        db.run('UPDATE otp_codes SET is_used = 1 WHERE id = ?', [row.id], (err) => {
-            if (err) {
-                return res.status(500).json({ error: 'Verification failed' });
+        otpRecord.is_used = true;
+        await otpRecord.save();
+
+        // Mark user as verified
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { is_verified: true },
+            { new: true, select: 'id name email phone' }
+        );
+
+        if (!user) {
+            return res.status(500).json({ error: 'User not found' });
+        }
+
+        req.session.userId = userId;
+        req.session.user = user;
+
+        res.json({ 
+            success: true, 
+            message: 'Account verified successfully!',
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                phone: user.phone
             }
-
-            // Mark user as verified
-            db.run('UPDATE users SET is_verified = 1 WHERE id = ?', [userId], (err) => {
-                if (err) {
-                    return res.status(500).json({ error: 'Verification failed' });
-                }
-
-                // Get user data
-                db.get('SELECT id, name, email, phone FROM users WHERE id = ?', [userId], (err, user) => {
-                    if (err || !user) {
-                        return res.status(500).json({ error: 'User not found' });
-                    }
-
-                    req.session.userId = userId;
-                    req.session.user = user;
-
-                    res.json({ 
-                        success: true, 
-                        message: 'Account verified successfully!',
-                        user: user
-                    });
-                });
-            });
         });
-    });
+    } catch (error) {
+        console.error('OTP verification error:', error);
+        res.status(500).json({ error: 'Verification failed' });
+    }
 });
 
 // Login
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { identifier, password } = req.body; // identifier can be email or phone
 
     if (!identifier) {
         return res.status(400).json({ error: 'Email or phone is required' });
     }
 
-    const query = 'SELECT * FROM users WHERE (email = ? OR phone = ?) AND is_verified = 1';
-    
-    db.get(query, [identifier, identifier], async (err, user) => {
-        if (err) {
-            return res.status(500).json({ error: 'Database error' });
-        }
+    try {
+        // Find user by email or phone
+        const user = await User.findOne({
+            $or: [{ email: identifier }, { phone: identifier }],
+            is_verified: true
+        });
+
         if (!user) {
             return res.status(400).json({ error: 'User not found or not verified' });
         }
@@ -336,53 +246,52 @@ app.post('/api/login', (req, res) => {
         if (!password) {
             const otp = generateOTP();
             const expiryMinutes = parseInt(process.env.OTP_EXPIRY_MINUTES) || 10;
-            const expiresAt = new Date(Date.now() + expiryMinutes * 60000).toISOString();
+            const expiresAt = new Date(Date.now() + expiryMinutes * 60000);
 
-            db.run(
-                'INSERT INTO otp_codes (user_id, code, type, expires_at) VALUES (?, ?, ?, ?)',
-                [user.id, otp, user.email ? 'email' : 'sms', expiresAt],
-                (err) => {
-                    if (err) {
-                        return res.status(500).json({ error: 'Failed to generate OTP' });
-                    }
+            await OTP.create({
+                user_id: user._id,
+                code: otp,
+                type: user.email ? 'email' : 'sms',
+                expires_at: expiresAt
+            });
 
-                    if (user.email) {
-                        sendOTPEmail(user.email, otp, user.name)
-                            .then(() => {
-                                res.json({ 
-                                    success: true, 
-                                    message: 'Login code sent to your email',
-                                    userId: user.id,
-                                    requiresOTP: true
-                                });
-                            })
-                            .catch(err => {
-                                res.json({ 
-                                    success: true, 
-                                    message: 'Your login code is: ' + otp,
-                                    userId: user.id,
-                                    requiresOTP: true,
-                                    otp: otp
-                                });
-                            });
-                    } else {
+            if (user.email) {
+                sendOTPEmail(user.email, otp, user.name)
+                    .then(() => {
+                        res.json({ 
+                            success: true, 
+                            message: 'Login code sent to your email',
+                            userId: user._id.toString(),
+                            requiresOTP: true
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Email error:', err);
                         res.json({ 
                             success: true, 
                             message: 'Your login code is: ' + otp,
-                            userId: user.id,
+                            userId: user._id.toString(),
                             requiresOTP: true,
                             otp: otp
                         });
-                    }
-                }
-            );
+                    });
+            } else {
+                res.json({ 
+                    success: true, 
+                    message: 'Your login code is: ' + otp,
+                    userId: user._id.toString(),
+                    requiresOTP: true,
+                    otp: otp
+                });
+            }
         } else {
             // Password login successful
-            db.run('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?', [user.id]);
+            user.last_login = new Date();
+            await user.save();
             
-            req.session.userId = user.id;
+            req.session.userId = user._id.toString();
             req.session.user = {
-                id: user.id,
+                id: user._id,
                 name: user.name,
                 email: user.email,
                 phone: user.phone
@@ -394,7 +303,10 @@ app.post('/api/login', (req, res) => {
                 user: req.session.user
             });
         }
-    });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ error: 'Login failed' });
+    }
 });
 
 // Check session
@@ -420,61 +332,63 @@ app.post('/api/logout', (req, res) => {
 });
 
 // Resend OTP
-app.post('/api/resend-otp', (req, res) => {
+app.post('/api/resend-otp', async (req, res) => {
     const { userId } = req.body;
 
     if (!userId) {
         return res.status(400).json({ error: 'User ID is required' });
     }
 
-    db.get('SELECT * FROM users WHERE id = ?', [userId], (err, user) => {
-        if (err || !user) {
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
             return res.status(400).json({ error: 'User not found' });
         }
 
         const otp = generateOTP();
         const expiryMinutes = parseInt(process.env.OTP_EXPIRY_MINUTES) || 10;
-        const expiresAt = new Date(Date.now() + expiryMinutes * 60000).toISOString();
+        const expiresAt = new Date(Date.now() + expiryMinutes * 60000);
 
-        db.run(
-            'INSERT INTO otp_codes (user_id, code, type, expires_at) VALUES (?, ?, ?, ?)',
-            [userId, otp, user.email ? 'email' : 'sms', expiresAt],
-            (err) => {
-                if (err) {
-                    return res.status(500).json({ error: 'Failed to generate OTP' });
-                }
+        await OTP.create({
+            user_id: userId,
+            code: otp,
+            type: user.email ? 'email' : 'sms',
+            expires_at: expiresAt
+        });
 
-                if (user.email) {
-                    sendOTPEmail(user.email, otp, user.name)
-                        .then(() => {
-                            res.json({ 
-                                success: true, 
-                                message: 'New verification code sent to your email'
-                            });
-                        })
-                        .catch(err => {
-                            res.json({ 
-                                success: true, 
-                                message: 'Your new verification code is: ' + otp,
-                                otp: otp
-                            });
-                        });
-                } else {
+        if (user.email) {
+            sendOTPEmail(user.email, otp, user.name)
+                .then(() => {
+                    res.json({ 
+                        success: true, 
+                        message: 'New verification code sent to your email'
+                    });
+                })
+                .catch(err => {
+                    console.error('Email error:', err);
                     res.json({ 
                         success: true, 
                         message: 'Your new verification code is: ' + otp,
                         otp: otp
                     });
-                }
-            }
-        );
-    });
+                });
+        } else {
+            res.json({ 
+                success: true, 
+                message: 'Your new verification code is: ' + otp,
+                otp: otp
+            });
+        }
+    } catch (error) {
+        console.error('Resend OTP error:', error);
+        res.status(500).json({ error: 'Failed to resend OTP' });
+    }
 });
 
 // ==================== PAYMENT ENDPOINTS ====================
 
 // Create new payment
-app.post('/api/payments/create', limiter, (req, res) => {
+app.post('/api/payments/create', limiter, async (req, res) => {
     const {
         paymentMethod,
         amount,
@@ -498,108 +412,90 @@ app.post('/api/payments/create', limiter, (req, res) => {
         });
     }
 
-    // Generate unique transaction ID
-    const transactionId = 'TXN' + Date.now() + Math.random().toString(36).substr(2, 9).toUpperCase();
+    try {
+        // Generate unique transaction ID
+        const transactionId = 'TXN' + Date.now() + Math.random().toString(36).substr(2, 9).toUpperCase();
 
-    // Get user_id from session if logged in
-    const userId = req.session.userId || null;
+        // Get user_id from session if logged in
+        const userId = req.session.userId || null;
 
-    const query = `INSERT INTO payments 
-        (transaction_id, user_id, payment_method, amount, fee, total_amount, 
-         exchange_type, sender_account, receiver_account, customer_name, 
-         customer_phone, customer_email, notes, status) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-    db.run(
-        query,
-        [
-            transactionId,
-            userId,
-            paymentMethod,
+        const payment = await Payment.create({
+            transaction_id: transactionId,
+            user_id: userId,
+            payment_method: paymentMethod,
             amount,
             fee,
-            totalAmount,
-            exchangeType,
-            senderAccount,
-            receiverAccount,
-            customerName,
-            customerPhone,
-            customerEmail || null,
-            notes || null,
-            'completed'
-        ],
-        function(err) {
-            if (err) {
-                console.error('Payment creation error:', err);
-                return res.json({ 
-                    success: false, 
-                    error: 'Failed to create payment' 
-                });
-            }
+            total_amount: totalAmount,
+            exchange_type: exchangeType,
+            sender_account: senderAccount,
+            receiver_account: receiverAccount,
+            customer_name: customerName,
+            customer_phone: customerPhone,
+            customer_email: customerEmail || null,
+            notes: notes || null,
+            status: 'completed'
+        });
 
-            res.json({ 
-                success: true, 
-                message: 'Payment completed successfully',
-                paymentId: this.lastID,
-                transactionId: transactionId
-            });
-        }
-    );
+        res.json({ 
+            success: true, 
+            message: 'Payment completed successfully',
+            paymentId: payment._id.toString(),
+            transactionId: transactionId
+        });
+    } catch (error) {
+        console.error('Payment creation error:', error);
+        res.json({ 
+            success: false, 
+            error: 'Failed to create payment' 
+        });
+    }
 });
 
 // Get payment by ID
-app.get('/api/payments/:id', (req, res) => {
-    const paymentId = req.params.id;
+app.get('/api/payments/:id', async (req, res) => {
+    try {
+        const payment = await Payment.findById(req.params.id);
 
-    db.get(
-        'SELECT * FROM payments WHERE id = ?',
-        [paymentId],
-        (err, payment) => {
-            if (err) {
-                return res.json({ 
-                    success: false, 
-                    error: 'Database error' 
-                });
-            }
-
-            if (!payment) {
-                return res.json({ 
-                    success: false, 
-                    error: 'Payment not found' 
-                });
-            }
-
-            res.json({ 
-                success: true, 
-                payment: payment 
+        if (!payment) {
+            return res.json({ 
+                success: false, 
+                error: 'Payment not found' 
             });
         }
-    );
+
+        res.json({ 
+            success: true, 
+            payment: payment 
+        });
+    } catch (error) {
+        console.error('Payment fetch error:', error);
+        res.json({ 
+            success: false, 
+            error: 'Database error' 
+        });
+    }
 });
 
 // Get all payments (Admin)
-app.get('/api/payments/all', (req, res) => {
-    db.all(
-        'SELECT * FROM payments ORDER BY created_at DESC',
-        [],
-        (err, payments) => {
-            if (err) {
-                return res.json({ 
-                    success: false, 
-                    error: 'Database error' 
-                });
-            }
+app.get('/api/payments/all', async (req, res) => {
+    try {
+        const payments = await Payment.find().sort({ created_at: -1 });
 
-            res.json({ 
-                success: true, 
-                payments: payments || [] 
-            });
-        }
-    );
+        res.json({ 
+            success: true, 
+            payments: payments || [] 
+        });
+    } catch (error) {
+        console.error('Payments fetch error:', error);
+        res.json({ 
+            success: false, 
+            error: 'Database error' 
+        });
+    }
 });
 
 // Get user payments (authenticated user only)
-app.get('/api/payments/user/history', (req, res) => {
+app.get('/api/payments/user/history', async (req, res) => {
     if (!req.session.userId) {
         return res.json({ 
             success: false, 
@@ -607,56 +503,50 @@ app.get('/api/payments/user/history', (req, res) => {
         });
     }
 
-    db.all(
-        'SELECT * FROM payments WHERE user_id = ? ORDER BY created_at DESC',
-        [req.session.userId],
-        (err, payments) => {
-            if (err) {
-                return res.json({ 
-                    success: false, 
-                    error: 'Database error' 
-                });
-            }
+    try {
+        const payments = await Payment.find({ user_id: req.session.userId }).sort({ created_at: -1 });
 
-            res.json({ 
-                success: true, 
-                payments: payments || [] 
-            });
-        }
-    );
+        res.json({ 
+            success: true, 
+            payments: payments || [] 
+        });
+    } catch (error) {
+        console.error('User payments fetch error:', error);
+        res.json({ 
+            success: false, 
+            error: 'Database error' 
+        });
+    }
 });
 
 // Get payment statistics
-app.get('/api/payments/stats', (req, res) => {
-    const queries = {
-        total: 'SELECT COUNT(*) as count FROM payments',
-        completed: 'SELECT COUNT(*) as count FROM payments WHERE status = "completed"',
-        pending: 'SELECT COUNT(*) as count FROM payments WHERE status = "pending"',
-        volume: 'SELECT SUM(total_amount) as total FROM payments WHERE status = "completed"'
-    };
+app.get('/api/payments/stats', async (req, res) => {
+    try {
+        const stats = {
+            total: await Payment.countDocuments(),
+            completed: await Payment.countDocuments({ status: 'completed' }),
+            pending: await Payment.countDocuments({ status: 'pending' }),
+            volume: 0
+        };
 
-    const stats = {};
+        const volumeResult = await Payment.aggregate([
+            { $match: { status: 'completed' } },
+            { $group: { _id: null, total: { $sum: '$total_amount' } } }
+        ]);
 
-    db.get(queries.total, (err, row) => {
-        stats.total = row ? row.count : 0;
-        
-        db.get(queries.completed, (err, row) => {
-            stats.completed = row ? row.count : 0;
-            
-            db.get(queries.pending, (err, row) => {
-                stats.pending = row ? row.count : 0;
-                
-                db.get(queries.volume, (err, row) => {
-                    stats.volume = row && row.total ? row.total : 0;
-                    
-                    res.json({ 
-                        success: true, 
-                        stats: stats 
-                    });
-                });
-            });
+        stats.volume = volumeResult.length > 0 ? volumeResult[0].total : 0;
+
+        res.json({ 
+            success: true, 
+            stats: stats 
         });
-    });
+    } catch (error) {
+        console.error('Stats fetch error:', error);
+        res.json({ 
+            success: false, 
+            error: 'Database error' 
+        });
+    }
 });
 
 // ============================================
@@ -702,49 +592,42 @@ app.post('/api/submissions/create', async (req, res) => {
     const userId = req.session.userId || null;
 
     try {
-        // Insert submission into database
-        db.run(
-            `INSERT INTO customer_submissions (
-                user_id, customer_name, customer_phone, customer_email, 
-                usdt_wallet, evc_plus_number, xbet_id, melbet_id, 
-                moneygo_wallet, edahap_number, premier_wallet, notes, status
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [
-                userId, customerName, customerPhone, customerEmail,
-                usdtWallet || null, evcPlusNumber || null, xbetId || null, melbetId || null,
-                moneygoWallet || null, edahapNumber || null, premierWallet || null, notes || null,
-                'pending'
-            ],
-            function(err) {
-                if (err) {
-                    console.error('Database error:', err);
-                    return res.status(500).json({ 
-                        success: false, 
-                        message: 'Failed to save submission' 
-                    });
-                }
+        // Create submission
+        const submission = await Submission.create({
+            user_id: userId,
+            customer_name: customerName,
+            customer_phone: customerPhone,
+            customer_email: customerEmail,
+            usdt_wallet: usdtWallet || null,
+            evc_plus_number: evcPlusNumber || null,
+            xbet_id: xbetId || null,
+            melbet_id: melbetId || null,
+            moneygo_wallet: moneygoWallet || null,
+            edahap_number: edahapNumber || null,
+            premier_wallet: premierWallet || null,
+            notes: notes || null,
+            status: 'pending'
+        });
 
-                const submissionId = this.lastID;
+        // Send email notification to admin
+        sendAdminNotificationEmail({
+            submissionId: submission._id,
+            customerName,
+            customerPhone,
+            customerEmail,
+            accounts: {
+                usdtWallet,
+                evcPlusNumber,
+                xbetId,
+                melbetId,
+                moneygoWallet,
+                edahapNumber,
+                premierWallet
+            },
+            notes
+        });
 
-                // Send email notification to admin
-                sendAdminNotificationEmail({
-                    submissionId,
-                    customerName,
-                    customerPhone,
-                    customerEmail,
-                    accounts: {
-                        usdtWallet,
-                        evcPlusNumber,
-                        xbetId,
-                        melbetId,
-                        moneygoWallet,
-                        edahapNumber,
-                        premierWallet
-                    },
-                    notes
-                });
-
-                res.json({ 
+        res.json({ 
                     success: true, 
                     message: 'Your details have been submitted successfully',
                     submissionId: submissionId
@@ -761,60 +644,50 @@ app.post('/api/submissions/create', async (req, res) => {
 });
 
 // Get all customer submissions (Admin)
-app.get('/api/submissions/all', (req, res) => {
-    db.all(
-        'SELECT * FROM customer_submissions ORDER BY created_at DESC',
-        [],
-        (err, submissions) => {
-            if (err) {
-                console.error('Database error:', err);
-                return res.status(500).json({ 
-                    success: false, 
-                    error: 'Database error' 
-                });
-            }
+app.get('/api/submissions/all', async (req, res) => {
+    try {
+        const submissions = await Submission.find().sort({ created_at: -1 });
 
-            res.json({ 
-                success: true, 
-                submissions: submissions || [] 
-            });
-        }
-    );
+        res.json({ 
+            success: true, 
+            submissions: submissions || [] 
+        });
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Database error' 
+        });
+    }
 });
 
 // Get single submission by ID
-app.get('/api/submissions/:id', (req, res) => {
-    const submissionId = req.params.id;
+app.get('/api/submissions/:id', async (req, res) => {
+    try {
+        const submission = await Submission.findById(req.params.id);
 
-    db.get(
-        'SELECT * FROM customer_submissions WHERE id = ?',
-        [submissionId],
-        (err, submission) => {
-            if (err) {
-                return res.status(500).json({ 
-                    success: false, 
-                    error: 'Database error' 
-                });
-            }
-
-            if (!submission) {
-                return res.status(404).json({ 
-                    success: false, 
-                    error: 'Submission not found' 
-                });
-            }
-
-            res.json({ 
-                success: true, 
-                submission: submission 
+        if (!submission) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Submission not found' 
             });
         }
-    );
+
+        res.json({ 
+            success: true, 
+            submission: submission 
+        });
+    } catch (error) {
+        console.error('Submission fetch error:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Database error' 
+        });
+    }
 });
 
 // Update submission status (Admin)
-app.put('/api/submissions/:id/status', (req, res) => {
-    const submissionId = req.params.id;
+app.put('/api/submissions/:id/status', async (req, res) => {
     const { status } = req.body;
 
     if (!status || !['pending', 'processing', 'completed', 'rejected'].includes(status)) {
@@ -824,30 +697,31 @@ app.put('/api/submissions/:id/status', (req, res) => {
         });
     }
 
-    db.run(
-        'UPDATE customer_submissions SET status = ? WHERE id = ?',
-        [status, submissionId],
-        function(err) {
-            if (err) {
-                return res.status(500).json({ 
-                    success: false, 
-                    error: 'Database error' 
-                });
-            }
+    try {
+        const submission = await Submission.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true }
+        );
 
-            if (this.changes === 0) {
-                return res.status(404).json({ 
-                    success: false, 
-                    error: 'Submission not found' 
-                });
-            }
-
-            res.json({ 
-                success: true, 
-                message: 'Status updated successfully' 
+        if (!submission) {
+            return res.status(404).json({ 
+                success: false, 
+                error: 'Submission not found' 
             });
         }
-    );
+
+        res.json({ 
+            success: true, 
+            message: 'Status updated successfully' 
+        });
+    } catch (error) {
+        console.error('Status update error:', error);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Database error' 
+        });
+    }
 });
 
 // Function to send admin notification email
