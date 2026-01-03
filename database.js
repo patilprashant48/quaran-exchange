@@ -1,19 +1,26 @@
 const mongoose = require('mongoose');
 
-// Connect to MongoDB
+// MongoDB connection state
+let isConnected = false;
+
+// Connect to MongoDB with caching for serverless
 const connectDB = async () => {
+    if (isConnected) {
+        console.log('✅ Using existing MongoDB connection');
+        return;
+    }
+
     try {
         const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/qaran-exchange', {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+            bufferCommands: false,
         });
+        
+        isConnected = conn.connection.readyState === 1;
         console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
         console.error('❌ MongoDB connection error:', error.message);
-        // Don't exit in serverless environment
-        if (!process.env.VERCEL) {
-            process.exit(1);
-        }
+        isConnected = false;
+        throw error;
     }
 };
 
