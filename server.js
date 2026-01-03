@@ -160,30 +160,23 @@ app.post('/api/register', async (req, res) => {
         });
 
         // Send OTP
+        req.session.pendingUserId = user._id.toString();
+        
         if (email) {
-            sendOTPEmail(email, otp, name)
-                .then(() => {
-                    req.session.pendingUserId = user._id.toString();
-                    res.json({ 
-                        success: true, 
-                        message: 'Registration successful. Please check your email for verification code.',
-                        userId: user._id.toString(),
-                        verificationType: 'email'
-                    });
-                })
-                .catch(err => {
-                    console.error('Email error:', err);
-                    res.json({ 
-                        success: true, 
-                        message: 'Registration successful. Your verification code is: ' + otp,
-                        userId: user._id.toString(),
-                        verificationType: 'email',
-                        otp: otp // For testing without email
-                    });
-                });
+            // Send email asynchronously but don't wait for it
+            sendOTPEmail(email, otp, name).catch(err => {
+                console.error('Email error:', err);
+            });
+            
+            res.json({ 
+                success: true, 
+                message: 'Registration successful. Please check your email for verification code.',
+                userId: user._id.toString(),
+                verificationType: 'email',
+                otp: process.env.NODE_ENV !== 'production' ? otp : undefined // Show OTP in dev mode
+            });
         } else {
             // For SMS, return OTP in response (in production, send via Twilio)
-            req.session.pendingUserId = user._id.toString();
             res.json({ 
                 success: true, 
                 message: 'Registration successful. Your verification code is: ' + otp,
