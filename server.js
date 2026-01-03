@@ -29,8 +29,16 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Connect to MongoDB before processing API requests (skip for static files)
 app.use('/api', async (req, res, next) => {
+    // Skip MongoDB connection for ping endpoint
+    if (req.path === '/ping' || req.path === '/test') {
+        return next();
+    }
+    
     try {
+        console.log('Attempting MongoDB connection...');
+        console.log('MONGODB_URI exists:', !!process.env.MONGODB_URI);
         await connectDB();
+        console.log('MongoDB connected successfully');
         next();
     } catch (error) {
         console.error('Database connection failed:', error);
@@ -98,6 +106,19 @@ function sendOTPEmail(email, otp, name) {
 // Simple test endpoint (no DB)
 app.get('/api/ping', (req, res) => {
     res.json({ success: true, message: 'pong', timestamp: new Date().toISOString() });
+});
+
+// Test endpoint without database
+app.get('/api/test', (req, res) => {
+    res.json({ 
+        success: true, 
+        message: 'Serverless function is working',
+        env: {
+            nodeEnv: process.env.NODE_ENV,
+            hasMongoUri: !!process.env.MONGODB_URI,
+            mongoUriStart: process.env.MONGODB_URI ? process.env.MONGODB_URI.substring(0, 20) + '...' : 'NOT SET'
+        }
+    });
 });
 
 // Health check endpoint
