@@ -23,19 +23,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
-// Connect to MongoDB before processing requests
-app.use(async (req, res, next) => {
+// Connect to MongoDB before processing API requests (skip for static files)
+app.use('/api', async (req, res, next) => {
     try {
         await connectDB();
         next();
     } catch (error) {
         console.error('Database connection failed:', error);
-        res.status(500).json({ error: 'Database connection failed' });
+        res.status(500).json({ error: 'Database connection failed', details: error.message });
     }
 });
 
 // Session configuration
-app.use(session({
     secret: process.env.SESSION_SECRET || 'qaran-exchange-secret-key',
     resave: false,
     saveUninitialized: false,
