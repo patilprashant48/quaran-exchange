@@ -35,6 +35,7 @@ app.use('/api', async (req, res, next) => {
 });
 
 // Session configuration
+app.use(session({
     secret: process.env.SESSION_SECRET || 'qaran-exchange-secret-key',
     resave: false,
     saveUninitialized: false,
@@ -661,12 +662,10 @@ app.post('/api/submissions/create', async (req, res) => {
         });
 
         res.json({ 
-                    success: true, 
-                    message: 'Your details have been submitted successfully',
-                    submissionId: submissionId
-                });
-            }
-        );
+            success: true, 
+            message: 'Your details have been submitted successfully',
+            submissionId: submission._id
+        });
     } catch (error) {
         console.error('Error creating submission:', error);
         res.status(500).json({ 
