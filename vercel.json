@@ -1,15 +1,8 @@
 {
-  "version": 2,
   "functions": {
-    "api/index.js": {
+    "api/**/*.js": {
       "memory": 1024,
       "maxDuration": 30
     }
-  },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.js"
-    }
-  ]
+  }
 }
