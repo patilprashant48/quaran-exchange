@@ -5,7 +5,7 @@ let isConnected = false;
 
 // Connect to MongoDB with caching for serverless
 const connectDB = async () => {
-    if (isConnected) {
+    if (isConnected && mongoose.connection.readyState === 1) {
         console.log('✅ Using existing MongoDB connection');
         return;
     }
@@ -13,6 +13,8 @@ const connectDB = async () => {
     try {
         const conn = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/qaran-exchange', {
             bufferCommands: false,
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 10000,
         });
         
         isConnected = conn.connection.readyState === 1;
