@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Verify your account - Qaran Exchange">
+    <title>Verify Account - Qaran Exchange</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 2rem 0;
+        }
+        .auth-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 100%;
+            padding: 3rem 2.5rem;
+            margin: 0 1rem;
+        }
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .auth-logo img {
+            height: 60px;
+            margin-bottom: 1rem;
+        }
+        .auth-logo h2 {
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        .auth-logo p {
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+        .otp-inputs {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        .otp-input {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+        .otp-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .btn-auth {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-top: 1rem;
+        }
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(26, 115, 232, 0.4);
+        }
+        .btn-auth:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+        .resend-section {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-color);
+        }
+        .resend-section button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .resend-section button:disabled {
+            color: var(--text-color);
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+        .timer {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        .alert.show {
+            display: block;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .demo-note {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .demo-note strong {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <img src="images/logo.jpg" alt="Qaran Exchange">
+                <h2>Verify Your Account</h2>
+                <p id="verificationMessage">Enter the 6-digit code sent to your email</p>
+            </div>
+
+            <div id="alertBox" class="alert"></div>
+
+            <div id="demoNote" class="demo-note" style="display: none;">
+                <strong><i class="fas fa-info-circle"></i> Demo Mode</strong>
+                Your verification code: <span id="demoOtpDisplay" style="font-weight: 600; font-size: 1.1rem;"></span>
+            </div>
+
+            <form id="verifyForm">
+                <div class="otp-inputs">
+                    <input type="text" maxlength="1" class="otp-input" id="otp1" required>
+                    <input type="text" maxlength="1" class="otp-input" id="otp2" required>
+                    <input type="text" maxlength="1" class="otp-input" id="otp3" required>
+                    <input type="text" maxlength="1" class="otp-input" id="otp4" required>
+                    <input type="text" maxlength="1" class="otp-input" id="otp5" required>
+                    <input type="text" maxlength="1" class="otp-input" id="otp6" required>
+                </div>
+
+                <button type="submit" class="btn-auth" id="submitBtn">
+                    <i class="fas fa-check-circle"></i> Verify Account
+                </button>
+            </form>
+
+            <div class="resend-section">
+                <p>Didn't receive the code?</p>
+                <button id="resendBtn" disabled>
+                    Resend in <span class="timer" id="timer">60</span>s
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('verifyForm');
+        const alertBox = document.getElementById('alertBox');
+        const submitBtn = document.getElementById('submitBtn');
+        const resendBtn = document.getElementById('resendBtn');
+        const timerDisplay = document.getElementById('timer');
+        const otpInputs = document.querySelectorAll('.otp-input');
+        const demoNote = document.getElementById('demoNote');
+        const demoOtpDisplay = document.getElementById('demoOtpDisplay');
+
+        let timeLeft = 60;
+        let timerInterval;
+
+        // Check if user came from registration
+        const userId = localStorage.getItem('pendingUserId');
+        const verificationType = localStorage.getItem('verificationType');
+        const demoOTP = localStorage.getItem('demoOTP');
+
+        if (!userId) {
+            window.location.href = 'register.html';
+        }
+
+        // Update verification message
+        if (verificationType === 'phone') {
+            document.getElementById('verificationMessage').textContent = 'Enter the 6-digit code sent to your phone';
+        }
+
+        // Show demo OTP if available
+        if (demoOTP) {
+            demoNote.style.display = 'block';
+            demoOtpDisplay.textContent = demoOTP;
+        }
+
+        // OTP input handling
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1) {
+                    if (index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+
+            // Only allow numbers
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            });
+        });
+
+        // Start countdown timer
+        function startTimer() {
+            timeLeft = 60;
+            resendBtn.disabled = true;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    resendBtn.disabled = false;
+                    resendBtn.innerHTML = '<i class="fas fa-redo"></i> Resend Code';
+                }
+            }, 1000);
+        }
+
+        startTimer();
+
+        // Show alert message
+        function showAlert(message, type) {
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type} show`;
+            setTimeout(() => {
+                alertBox.className = 'alert';
+            }, 5000);
+        }
+
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const otp = Array.from(otpInputs).map(input => input.value).join('');
+
+            if (otp.length !== 6) {
+                showAlert('Please enter all 6 digits', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+            try {
+                const response = await fetch('/api/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: userId,
+                        otp: otp
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Account verified successfully!', 'success');
+                    // Clear stored data
+                    localStorage.removeItem('pendingUserId');
+                    localStorage.removeItem('verificationType');
+                    localStorage.removeItem('demoOTP');
+                    // Redirect to dashboard or home
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    showAlert(data.error || 'Verification failed', 'error');
+                    // Clear inputs
+                    otpInputs.forEach(input => input.value = '');
+                    otpInputs[0].focus();
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verify Account';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('An error occurred. Please try again.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Verify Account';
+            }
+        });
+
+        // Handle resend OTP
+        resendBtn.addEventListener('click', async () => {
+            resendBtn.disabled = true;
+            resendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                const response = await fetch('/api/resend-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userId: userId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Verification code sent successfully!', 'success');
+                    if (data.otp) {
+                        demoNote.style.display = 'block';
+                        demoOtpDisplay.textContent = data.otp;
+                        localStorage.setItem('demoOTP', data.otp);
+                    }
+                    startTimer();
+                } else {
+                    showAlert(data.error || 'Failed to resend code', 'error');
+                    resendBtn.disabled = false;
+                    resendBtn.innerHTML = '<i class="fas fa-redo"></i> Resend Code';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('An error occurred. Please try again.', 'error');
+                resendBtn.disabled = false;
+                resendBtn.innerHTML = '<i class="fas fa-redo"></i> Resend Code';
+            }
+        });
+    </script>
+</body>
+</html>

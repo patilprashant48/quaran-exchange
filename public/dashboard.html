@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="User Dashboard - Qaran Exchange">
+    <title>Dashboard - Qaran Exchange</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .dashboard {
+            min-height: 100vh;
+            background: #f5f7fa;
+        }
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .dashboard-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .dashboard-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        .dashboard-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .dashboard-header .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--white);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .dashboard-header .user-details h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        .dashboard-header .user-details p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .dashboard-nav {
+            background: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 0;
+        }
+        .dashboard-nav ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .dashboard-nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .dashboard-nav a:hover, .dashboard-nav a.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        .dashboard-content {
+            padding: 2rem 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .stat-icon.blue {
+            background: rgba(26, 115, 232, 0.1);
+            color: var(--primary-color);
+        }
+        .stat-icon.green {
+            background: rgba(52, 168, 83, 0.1);
+            color: #34a853;
+        }
+        .stat-icon.orange {
+            background: rgba(251, 188, 5, 0.1);
+            color: #fbbc05;
+        }
+        .stat-icon.red {
+            background: rgba(234, 67, 53, 0.1);
+            color: #ea4335;
+        }
+        .stat-info h4 {
+            margin: 0;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .stat-info p {
+            margin: 0.5rem 0 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        .content-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        .content-card h2 {
+            margin: 0 0 1.5rem;
+            color: var(--dark-color);
+            font-size: 1.5rem;
+        }
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .action-btn {
+            padding: 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: var(--dark-color);
+        }
+        .action-btn:hover {
+            border-color: var(--primary-color);
+            background: rgba(26, 115, 232, 0.05);
+            transform: translateY(-2px);
+        }
+        .action-btn i {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        .action-btn span {
+            font-weight: 600;
+        }
+        .logout-btn {
+            background: #ea4335;
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .logout-btn:hover {
+            background: #d33b2c;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-color);
+        }
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--border-color);
+            margin-bottom: 1rem;
+        }
+        .empty-state h3 {
+            margin: 1rem 0;
+            color: var(--dark-color);
+        }
+        @media (max-width: 768px) {
+            .dashboard-header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .dashboard-nav ul {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <div class="container">
+                <h1><i class="fas fa-chart-line"></i> Dashboard</h1>
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <div class="user-details">
+                        <h3 id="userName">Loading...</h3>
+                        <p id="userEmail">...</p>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-nav">
+            <div class="container">
+                <ul>
+                    <li><a href="#" class="active"><i class="fas fa-home"></i> Overview</a></li>
+                    <li><a href="services.html"><i class="fas fa-exchange-alt"></i> New Exchange</a></li>
+                    <li><a href="contact.html"><i class="fas fa-headset"></i> Support</a></li>
+                    <li><a href="index.html"><i class="fas fa-globe"></i> Main Site</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Total Exchanges</h4>
+                            <p id="totalExchanges">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Completed</h4>
+                            <p id="completedExchanges">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Pending</h4>
+                            <p id="pendingExchanges">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon red">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Total Volume</h4>
+                            <p id="totalVolume">$0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+                    <div class="quick-actions">
+                        <a href="payment.html" class="action-btn">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Make Payment</span>
+                        </a>
+                        <a href="services.html" class="action-btn">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span>New Exchange</span>
+                        </a>
+                        <a href="services.html#mobile-money" class="action-btn">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>Mobile Money</span>
+                        </a>
+                        <a href="services.html#usdt" class="action-btn">
+                            <i class="fas fa-coins"></i>
+                            <span>USDT Exchange</span>
+                        </a>
+                        <a href="contact.html" class="action-btn">
+                            <i class="fas fa-headset"></i>
+                            <span>Contact Support</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <h2><i class="fas fa-history"></i> Recent Transactions</h2>
+                    <div id="transactionsContainer">
+                        <div class="empty-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading transactions...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        // Check if user is logged in
+        async function checkSession() {
+            try {
+                const response = await fetch('/api/check-session');
+                const data = await response.json();
+
+                if (!data.authenticated) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                currentUser = data.user;
+                updateUserInfo();
+            } catch (error) {
+                console.error('Error checking session:', error);
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Update user information on page
+        function updateUserInfo() {
+            if (!currentUser) return;
+
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userEmail').textContent = currentUser.email || currentUser.phone || '';
+            
+            // Set avatar initial
+            const initial = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('userAvatar').textContent = initial;
+
+            // Load payment history
+            loadPaymentHistory();
+        }
+
+        // Load payment history
+        async function loadPaymentHistory() {
+            try {
+                const response = await fetch('/api/payments/user/history');
+                const data = await response.json();
+
+                const container = document.getElementById('transactionsContainer');
+
+                if (data.success && data.payments && data.payments.length > 0) {
+                    // Update statistics
+                    const total = data.payments.length;
+                    const completed = data.payments.filter(p => p.status === 'completed').length;
+                    const pending = data.payments.filter(p => p.status === 'pending').length;
+                    const volume = data.payments.reduce((sum, p) => sum + parseFloat(p.total_amount), 0);
+
+                    document.getElementById('totalExchanges').textContent = total;
+                    document.getElementById('completedExchanges').textContent = completed;
+                    document.getElementById('pendingExchanges').textContent = pending;
+                    document.getElementById('totalVolume').textContent = `$${volume.toFixed(2)}`;
+
+                    // Display transactions
+                    const recentPayments = data.payments.slice(0, 5);
+                    container.innerHTML = `
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: var(--light-color);">
+                                    <th style="padding: 1rem; text-align: left;">Date</th>
+                                    <th style="padding: 1rem; text-align: left;">Transaction ID</th>
+                                    <th style="padding: 1rem; text-align: left;">Method</th>
+                                    <th style="padding: 1rem; text-align: left;">Amount</th>
+                                    <th style="padding: 1rem; text-align: left;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${recentPayments.map(payment => `
+                                    <tr style="border-bottom: 1px solid var(--border-color);">
+                                        <td style="padding: 1rem;">${new Date(payment.created_at).toLocaleDateString()}</td>
+                                        <td style="padding: 1rem;"><strong>${payment.transaction_id}</strong></td>
+                                        <td style="padding: 1rem; text-transform: uppercase; color: var(--primary-color);">${payment.payment_method}</td>
+                                        <td style="padding: 1rem;"><strong>$${parseFloat(payment.total_amount).toFixed(2)}</strong></td>
+                                        <td style="padding: 1rem;">
+                                            <span style="background: #d4edda; color: #155724; padding: 0.375rem 0.875rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                                                ${payment.status.toUpperCase()}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        ${data.payments.length > 5 ? '<p style="text-align: center; margin-top: 1rem; color: var(--text-color);">Showing 5 most recent transactions</p>' : ''}
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <h3>No transactions yet</h3>
+                            <p>Your payment history will appear here once you make a payment.</p>
+                            <a href="payment.html" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; background: var(--primary-color); color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+                                <i class="fas fa-plus"></i> Make First Payment
+                            </a>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading payments:', error);
+                document.getElementById('transactionsContainer').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Could not load transactions</h3>
+                        <p>Please refresh the page to try again.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Handle logout
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                console.error('Error logging out:', error);
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Check session on page load
+        checkSession();
+    </script>
+</body>
+</html>

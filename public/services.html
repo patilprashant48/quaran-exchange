@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Qaran Exchange Services - Money Transfers, Currency Exchange, Digital Currency">
+    <title>Our Services - Qaran Exchange</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="images/logo.jpg" alt="Qaran Exchange Logo" class="logo-img">
+                    <span class="logo-text">Qaran Exchange</span>
+                </div>
+                
+                <div class="nav-menu" id="navMenu">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link" data-translate="nav_home">Home</a></li>
+                        <li><a href="about.html" class="nav-link" data-translate="nav_about">About Us</a></li>
+                        <li><a href="services.html" class="nav-link active" data-translate="nav_services">Services</a></li>
+                        <li><a href="payment.html" class="nav-link"><i class="fas fa-money-bill-wave"></i> Make Payment</a></li>
+                        <li><a href="submit-details.html" class="nav-link"><i class="fas fa-clipboard-list"></i> Submit Details</a></li>
+                        <li><a href="contact.html" class="nav-link" data-translate="nav_contact">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="nav-actions">
+                    <div class="auth-buttons" id="authButtons">
+                        <a href="login.html" class="btn-login">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span data-translate="nav_login">Login</span>
+                        </a>
+                        <a href="register.html" class="btn-register">
+                            <i class="fas fa-user-plus"></i>
+                            <span data-translate="nav_register">Register</span>
+                        </a>
+                    </div>
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <button class="user-btn" id="userBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userNameNav">User</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a>
+                            <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                    <div class="language-switcher">
+                        <button class="lang-btn" id="langBtn">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">EN</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="lang-dropdown" id="langDropdown">
+                            <button class="lang-option" data-lang="en">English</button>
+                            <button class="lang-option" data-lang="so">Somali</button>
+                        </div>
+                    </div>
+                    <button class="mobile-toggle" id="mobileToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 data-translate="services_page_title">Our Services</h1>
+            <p data-translate="services_page_subtitle">Comprehensive money transfer and currency exchange solutions</p>
+        </div>
+    </section>
+
+    <!-- Services Detail Section -->
+    <section class="services-detail">
+        <div class="container">
+            <!-- Money Transfer Service -->
+            <div class="service-detail-card">
+                <div class="service-detail-content">
+                    <div class="service-detail-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h2 data-translate="service_mobile_money">Mobile Money & Digital Wallet Exchange</h2>
+                    <p data-translate="services_mobile_money_desc">Exchange between popular mobile money services and digital wallets instantly. Fast, secure, and reliable transfers at the best rates.</p>
+                    
+                    <h3 data-translate="services_features">Features:</h3>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_instant">Instant exchange processing</span></li>
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_low_fees">Competitive exchange rates</span></li>
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_track">24/7 availability</span></li>
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_multiple">Multiple platform support</span></li>
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_bank">Secure and verified transactions</span></li>
+                    </ul>
+                    
+                    <div class="service-countries">
+                        <h3 data-translate="services_supported_platforms">Supported Platforms:</h3>
+                        <div class="platforms-logo-grid">
+                            <div class="platform-logo-item">
+                                <img src="images/platforms/evcplus.jpg" alt="EVC Plus">
+                            </div>
+                            <div class="platform-logo-item">
+                                <img src="images/platforms/zaad.jpg" alt="Zaad">
+                            </div>
+                            <div class="platform-logo-item">
+                                <img src="images/platforms/premier.jpg" alt="Premier Wallet">
+                            </div>
+                            <div class="platform-logo-item">
+                                <img src="images/platforms/1xbet.jpg" alt="1XBET">
+                            </div>
+                            <div class="platform-logo-item">
+                                <img src="images/platforms/melbet.jpg" alt="Melbet">
+                            </div>
+                            <div class="platform-logo-item">
+                                <img src="images/platforms/moneygo.jpg" alt="Moneygo">
+                            </div>
+                            <div class="platform-logo-item">
+                                <img src="images/platforms/edahap.jpg" alt="Edahap">
+                            </div>
+                            <div class="platform-logo-item">
+                                <img src="images/platforms/usdt.jpg" alt="USDT">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-detail-image">
+                    <img src="images/money-transfer.jpg" alt="Mobile Money Exchange Service">
+            <!-- Quick Exchange Service -->
+            <div class="service-detail-card reverse">
+                <div class="service-detail-content">
+                    <div class="service-detail-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h2 data-translate="service_quick_exchange">Quick Exchange Service</h2>
+                    <p data-translate="services_quick_exchange_desc">Exchange between any supported platforms instantly. Whether it's mobile money, betting wallets, or USDT - we've got you covered with the best rates.</p>
+                    
+                    <h3 data-translate="services_features">Features:</h3>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_competitive">Best exchange rates in the market</span></li>
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_real_time">Instant processing</span></li>
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_transparent">Transparent pricing</span></li>
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_calculator">Exchange calculator available</span></li>
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_major">Cross-platform exchanges supported</span></li>
+                    </ul>
+                    
+                    <div class="service-countries">
+                        <h3 data-translate="services_exchange_pairs">Popular Exchange Pairs:</h3>
+                        <div class="countries-grid">
+                            <span class="country-tag"><i class="fas fa-arrow-right-arrow-left"></i> EVC Plus ↔ USDT</span>
+                            <span class="country-tag"><i class="fas fa-arrow-right-arrow-left"></i> Zaad ↔ 1XBET</span>
+                            <span class="country-tag"><i class="fas fa-arrow-right-arrow-left"></i> Premier ↔ Melbet</span>
+                            <span class="country-tag"><i class="fas fa-arrow-right-arrow-left"></i> Moneygo ↔ USDT</span>
+                            <span class="country-tag"><i class="fas fa-arrow-right-arrow-left"></i> Edahap ↔ EVC Plus</span>
+                            <span class="country-tag"><i class="fas fa-arrow-right-arrow-left"></i> Any to Any</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-detail-image">
+                    <img src="images/currency-exchange.jpg" alt="Quick Exchange Service">
+                </div>
+            </div>
+
+            <!-- USDT & Crypto Exchange Service -->
+            <div class="service-detail-card">
+                <div class="service-detail-content">
+                    <div class="service-detail-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h2 data-translate="service_usdt_exchange">USDT Exchange</h2>
+                    <p data-translate="services_usdt_desc">Buy and sell USDT (Tether) and exchange it with any of our supported mobile money platforms. Fast, secure, and at competitive rates.</p>
+                    
+                    <h3 data-translate="services_features">Features:</h3>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_secure_wallet">Secure USDT transactions</span></li>
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_easy">Easy conversion to mobile money</span></li>
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_crypto_rates">Real-time USDT rates</span></li>
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_convert">Convert USDT to EVC, Zaad, and more</span></li>
+                        <li><i class="fas fa-check"></i> <span data-translate="feature_guidance">Fast processing and support</span></li>
+                    </ul>
+                    
+                    <div class="service-countries">
+                        <h3 data-translate="services_usdt_pairs">USDT Exchange Options:</h3>
+                        <div class="countries-grid">
+                            <span class="country-tag"><i class="fas fa-coins"></i> USDT → EVC Plus</span>
+                            <span class="country-tag"><i class="fas fa-coins"></i> USDT → Zaad</span>
+                            <span class="country-tag"><i class="fas fa-coins"></i> USDT → Premier Wallet</span>
+                            <span class="country-tag"><i class="fas fa-coins"></i> USDT → Betting Wallets</span>
+                            <span class="country-tag"><i class="fas fa-coins"></i> USDT → Moneygo</span>
+                            <span class="country-tag"><i class="fas fa-coins"></i> USDT → Edahap</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="service-detail-image">
+                    <img src="images/digital-currency.jpg" alt="USDT Exchange Service">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->"
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2 data-translate="services_cta_title">Need Help Choosing a Service?</h2>
+                <p data-translate="services_cta_desc">Our team is here to assist you with any questions</p>
+                <a href="contact.html" class="btn btn-light" data-translate="cta_contact">Contact Us Today</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Qaran Exchange</h3>
+                    <p data-translate="footer_desc">Your trusted partner for secure money transfers and currency exchange services.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-translate="footer_quick_links">Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html" data-translate="nav_home">Home</a></li>
+                        <li><a href="about.html" data-translate="nav_about">About Us</a></li>
+                        <li><a href="services.html" data-translate="nav_services">Services</a></li>
+                        <li><a href="contact.html" data-translate="nav_contact">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-translate="footer_services">Services</h4>
+                    <ul>
+                        <li><a href="services.html" data-translate="service_mobile_money">Mobile Money Exchange</a></li>
+                        <li><a href="services.html" data-translate="service_betting_wallets">Betting Wallet Exchange</a></li>
+                        <li><a href="services.html" data-translate="service_usdt_exchange">USDT Exchange</a></li>
+                        <li><a href="chat.html" data-translate="nav_chat">Chat Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-translate="footer_contact">Contact Info</h4>
+                    <ul class="contact-info">
+                        <li><i class="fab fa-whatsapp"></i> <a href="https://wa.me/252612178241" style="color: inherit; text-decoration: none;">+252 61 217 8241</a></li>
+                        <li><i class="fas fa-envelope"></i> info@qaranexchange.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> <span data-translate="footer_location">Mogadishu, Somalia</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Qaran Exchange. <span data-translate="footer_rights">All rights reserved.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <button class="chat-bubble" id="chatBubble">
+            <i class="fas fa-comment"></i>
+        </button>
+    </div>
+
+    <script src="js/translations.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Register for Qaran Exchange - Secure Money Transfer">
+    <title>Register - Qaran Exchange</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 2rem 0;
+        }
+        .auth-card {
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 100%;
+            padding: 3rem 2.5rem;
+            margin: 0 1rem;
+        }
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .auth-logo img {
+            height: 60px;
+            margin-bottom: 1rem;
+        }
+        .auth-logo h2 {
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        .auth-logo p {
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .form-group .input-icon {
+            position: relative;
+        }
+        .form-group .input-icon i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+        }
+        .form-group .input-icon input {
+            padding-left: 3rem;
+        }
+        .btn-auth {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(26, 115, 232, 0.4);
+        }
+        .btn-auth:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .auth-divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-color);
+        }
+        .auth-divider span {
+            background: var(--white);
+            padding: 0 1rem;
+            position: relative;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-color);
+        }
+        .auth-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        .alert.show {
+            display: block;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .toggle-input {
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .toggle-input button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <img src="images/logo.jpg" alt="Qaran Exchange">
+                <h2>Create Your Account</h2>
+                <p>Start exchanging money securely</p>
+            </div>
+
+            <div id="alertBox" class="alert"></div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <div class="input-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                    </div>
+                </div>
+
+                <div class="form-group" id="emailGroup">
+                    <label for="email">Email Address *</label>
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" name="email" placeholder="Enter your email">
+                    </div>
+                </div>
+
+                <div class="form-group" id="phoneGroup" style="display: none;">
+                    <label for="phone">Phone Number *</label>
+                    <div class="input-icon">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+                    </div>
+                </div>
+
+                <div class="toggle-input">
+                    <button type="button" id="toggleInput">
+                        <i class="fas fa-exchange-alt"></i> Use phone number instead
+                    </button>
+                </div>
+
+                <div class="auth-divider">
+                    <span>Optional</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password (Optional)</label>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Create a password (optional)">
+                    </div>
+                    <small style="color: var(--text-color); font-size: 0.85rem;">
+                        You can login with just a verification code if you skip this
+                    </small>
+                </div>
+
+                <button type="submit" class="btn-auth" id="submitBtn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                Already have an account? <a href="login.html">Login here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const alertBox = document.getElementById('alertBox');
+        const submitBtn = document.getElementById('submitBtn');
+        const toggleBtn = document.getElementById('toggleInput');
+        const emailGroup = document.getElementById('emailGroup');
+        const phoneGroup = document.getElementById('phoneGroup');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+
+        let useEmail = true;
+
+        // Toggle between email and phone input
+        toggleBtn.addEventListener('click', () => {
+            useEmail = !useEmail;
+            if (useEmail) {
+                emailGroup.style.display = 'block';
+                phoneGroup.style.display = 'none';
+                emailInput.required = true;
+                phoneInput.required = false;
+                phoneInput.value = '';
+                toggleBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Use phone number instead';
+            } else {
+                emailGroup.style.display = 'none';
+                phoneGroup.style.display = 'block';
+                emailInput.required = false;
+                phoneInput.required = true;
+                emailInput.value = '';
+                toggleBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Use email instead';
+            }
+        });
+
+        // Show alert message
+        function showAlert(message, type) {
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type} show`;
+            setTimeout(() => {
+                alertBox.className = 'alert';
+            }, 5000);
+        }
+
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: useEmail ? document.getElementById('email').value : null,
+                phone: !useEmail ? document.getElementById('phone').value : null,
+                password: document.getElementById('password').value || null
+            };
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    // Store userId for verification page
+                    localStorage.setItem('pendingUserId', data.userId);
+                    localStorage.setItem('verificationType', data.verificationType);
+                    if (data.otp) {
+                        localStorage.setItem('demoOTP', data.otp);
+                    }
+                    // Redirect to verification page
+                    setTimeout(() => {
+                        window.location.href = 'verify.html';
+                    }, 2000);
+                } else {
+                    showAlert(data.error || 'Registration failed', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('An error occurred. Please try again.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+            }
+        });
+    </script>
+</body>
+</html>

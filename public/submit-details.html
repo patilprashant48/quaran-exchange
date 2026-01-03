@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Details - Qaran Exchange</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .submission-container {
+            max-width: 800px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+        }
+
+        .submission-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .submission-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .submission-header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .submission-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .info-box i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h3 {
+            color: #333;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-group label i {
+            margin-right: 8px;
+            color: var(--primary-color);
+            width: 20px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group small {
+            color: #999;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .required-mark {
+            color: #f44336;
+            margin-left: 3px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: #1976d2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-btn i {
+            margin-left: 10px;
+        }
+
+        .success-message,
+        .error-message {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .error-message {
+            background: #ffebee;
+            border-left: 4px solid #f44336;
+            color: #c62828;
+        }
+
+        .success-message i,
+        .error-message i {
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .submission-container {
+                margin-top: 80px;
+            }
+
+            .submission-card {
+                padding: 25px;
+            }
+
+            .submission-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">
+                <img src="images/logo.png" alt="Qaran Exchange Logo">
+            </div>
+            <button class="nav-toggle" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+            <div class="nav-menu">
+                <button class="close-menu" aria-label="Close menu">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="nav-content">
+                    <ul class="nav-list">
+                        <li><a href="index.html" class="nav-link" data-translate="nav_home">Home</a></li>
+                        <li><a href="about.html" class="nav-link" data-translate="nav_about">About Us</a></li>
+                        <li><a href="services.html" class="nav-link" data-translate="nav_services">Services</a></li>
+                        <li><a href="payment.html" class="nav-link"><i class="fas fa-money-bill-wave"></i> Make Payment</a></li>
+                        <li><a href="submit-details.html" class="nav-link active"><i class="fas fa-clipboard-list"></i> Submit Details</a></li>
+                        <li><a href="contact.html" class="nav-link" data-translate="nav_contact">Contact Us</a></li>
+                    </ul>
+                    <div class="nav-actions">
+                        <button class="language-switcher" id="langSwitch">
+                            <i class="fas fa-globe"></i>
+                            <span id="currentLang">EN</span>
+                        </button>
+                        <div class="auth-buttons" id="authButtons">
+                            <a href="login.html" class="btn btn-outline" data-translate="nav_login">Login</a>
+                            <a href="register.html" class="btn btn-primary" data-translate="nav_register">Register</a>
+                        </div>
+                        <div class="user-menu-container" id="userMenuContainer" style="display: none;">
+                            <button class="user-menu-button" id="userMenuButton">
+                                <i class="fas fa-user-circle"></i>
+                                <span id="userName">User</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="user-dropdown" id="userDropdown">
+                                <a href="dashboard.html" class="user-dropdown-item">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    <span data-translate="nav_dashboard">Dashboard</span>
+                                </a>
+                                <a href="#" class="user-dropdown-item" id="logoutBtn">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span data-translate="nav_logout">Logout</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="submission-container">
+        <div class="submission-card">
+            <div class="submission-header">
+                <h1><i class="fas fa-clipboard-list"></i> Submit Your Account Details</h1>
+                <p>Provide your account information for seamless transactions</p>
+            </div>
+
+            <div class="info-box">
+                <i class="fas fa-shield-alt"></i>
+                <p><strong>Secure & Confidential:</strong> Your information is encrypted and sent securely to our admin team for processing. We never share your details with third parties.</p>
+            </div>
+
+            <div id="successMessage" class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText"></span>
+            </div>
+
+            <div id="errorMessage" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText"></span>
+            </div>
+
+            <form id="submissionForm">
+                <!-- Customer Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Customer Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerName">
+                                <i class="fas fa-user"></i>
+                                Full Name <span class="required-mark">*</span>
+                            </label>
+                            <input type="text" id="customerName" name="customerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPhone">
+                                <i class="fas fa-phone"></i>
+                                Phone Number <span class="required-mark">*</span>
+                            </label>
+                            <input type="tel" id="customerPhone" name="customerPhone" required>
+                            <small>Include country code (e.g., +252612345678)</small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="customerEmail">
+                                <i class="fas fa-envelope"></i>
+                                Email Address <span class="required-mark">*</span>
+                            </label>
+                            <input type="email" id="customerEmail" name="customerEmail" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Details -->
+                <div class="form-section">
+                    <h3><i class="fas fa-wallet"></i> Account Details</h3>
+                    <p style="color: #666; margin-bottom: 20px; font-size: 0.9rem;">
+                        <i class="fas fa-info-circle"></i> Fill in only the accounts you have. Leave others blank.
+                    </p>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="usdtWallet">
+                                <i class="fab fa-bitcoin"></i>
+                                USDT Wallet Address
+                            </label>
+                            <input type="text" id="usdtWallet" name="usdtWallet" placeholder="TRC20 or ERC20 address">
+                            <small>e.g., TYzK8NwwYj...</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="evcPlusNumber">
+                                <i class="fas fa-mobile-alt"></i>
+                                EVC Plus Number
+                            </label>
+                            <input type="tel" id="evcPlusNumber" name="evcPlusNumber" placeholder="252XXXXXXXXX">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="xbetId">
+                                <i class="fas fa-gamepad"></i>
+                                1xBet ID
+                            </label>
+                            <input type="text" id="xbetId" name="xbetId" placeholder="Your 1xBet account ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="melbetId">
+                                <i class="fas fa-gamepad"></i>
+                                Melbet ID
+                            </label>
+                            <input type="text" id="melbetId" name="melbetId" placeholder="Your Melbet account ID">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="moneygoWallet">
+                                <i class="fas fa-wallet"></i>
+                                MoneyGo U Wallet
+                            </label>
+                            <input type="text" id="moneygoWallet" name="moneygoWallet" placeholder="MoneyGo wallet number">
+                        </div>
+                        <div class="form-group">
+                            <label for="edahapNumber">
+                                <i class="fas fa-mobile-alt"></i>
+                                Edahap Number
+                            </label>
+                            <input type="tel" id="edahapNumber" name="edahapNumber" placeholder="252XXXXXXXXX">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="premierWallet">
+                                <i class="fas fa-wallet"></i>
+                                Premier Wallet Number
+                            </label>
+                            <input type="text" id="premierWallet" name="premierWallet" placeholder="Premier wallet number">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-comment-dots"></i> Additional Information</h3>
+                    <div class="form-group">
+                        <label for="notes">
+                            <i class="fas fa-sticky-note"></i>
+                            Notes or Special Instructions (Optional)
+                        </label>
+                        <textarea id="notes" name="notes" placeholder="Any additional information you'd like to share..."></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    Submit Details
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-translate="footer_company">Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html" data-translate="footer_about">About Us</a></li>
+                        <li><a href="services.html" data-translate="footer_services">Our Services</a></li>
+                        <li><a href="contact.html" data-translate="footer_contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 data-translate="footer_support">Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="chat.html" data-translate="footer_chat">Chat Support</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 data-translate="footer_contact_us">Contact Us</h3>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-phone"></i> +252 61 234 5678</li>
+                        <li><i class="fas fa-envelope"></i> info@qaranexchange.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Mogadishu, Somalia</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Qaran Exchange. <span data-translate="footer_rights">All rights reserved.</span></p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/252612345678" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script src="js/translations.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        const form = document.getElementById('submissionForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const successText = document.getElementById('successText');
+        const errorText = document.getElementById('errorText');
+
+        // Auto-fill customer info if logged in
+        async function checkAndFillUserInfo() {
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/session', {
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.isAuthenticated && data.user) {
+                        // Auto-fill customer information
+                        if (data.user.email) {
+                            document.getElementById('customerEmail').value = data.user.email;
+                        }
+                        if (data.user.phone) {
+                            document.getElementById('customerPhone').value = data.user.phone;
+                        }
+                        if (data.user.firstName && data.user.lastName) {
+                            document.getElementById('customerName').value = `${data.user.firstName} ${data.user.lastName}`;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking session:', error);
+            }
+        }
+
+        // Hide messages
+        function hideMessages() {
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            hideMessages();
+            successText.textContent = message;
+            successMessage.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show error message
+        function showError(message) {
+            hideMessages();
+            errorText.textContent = message;
+            errorMessage.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+
+            // Validate at least one account is provided
+            const accounts = {
+                usdtWallet: document.getElementById('usdtWallet').value.trim(),
+                evcPlusNumber: document.getElementById('evcPlusNumber').value.trim(),
+                xbetId: document.getElementById('xbetId').value.trim(),
+                melbetId: document.getElementById('melbetId').value.trim(),
+                moneygoWallet: document.getElementById('moneygoWallet').value.trim(),
+                edahapNumber: document.getElementById('edahapNumber').value.trim(),
+                premierWallet: document.getElementById('premierWallet').value.trim()
+            };
+
+            const hasAtLeastOneAccount = Object.values(accounts).some(value => value !== '');
+
+            if (!hasAtLeastOneAccount) {
+                showError('Please provide at least one account detail.');
+                return;
+            }
+
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+            try {
+                const formData = {
+                    customerName: document.getElementById('customerName').value.trim(),
+                    customerPhone: document.getElementById('customerPhone').value.trim(),
+                    customerEmail: document.getElementById('customerEmail').value.trim(),
+                    usdtWallet: accounts.usdtWallet,
+                    evcPlusNumber: accounts.evcPlusNumber,
+                    xbetId: accounts.xbetId,
+                    melbetId: accounts.melbetId,
+                    moneygoWallet: accounts.moneygoWallet,
+                    edahapNumber: accounts.edahapNumber,
+                    premierWallet: accounts.premierWallet,
+                    notes: document.getElementById('notes').value.trim()
+                };
+
+                const response = await fetch('http://localhost:3000/api/submissions/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showSuccess('Your details have been submitted successfully! Our team will review and contact you shortly.');
+                    form.reset();
+                } else {
+                    showError(data.message || 'Failed to submit details. Please try again.');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                showError('An error occurred while submitting. Please check your connection and try again.');
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Submit Details <i class="fas fa-paper-plane"></i>';
+            }
+        });
+
+        // Load user info on page load
+        checkAndFillUserInfo();
+    </script>
+</body>
+</html>
