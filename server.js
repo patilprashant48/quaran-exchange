@@ -90,6 +90,27 @@ function sendOTPEmail(email, otp, name) {
 
 // API Routes
 
+// Health check endpoint
+app.get('/api/health', async (req, res) => {
+    try {
+        await connectDB();
+        const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+        res.json({ 
+            success: true, 
+            server: 'running',
+            database: dbStatus,
+            mongoUri: process.env.MONGODB_URI ? 'configured' : 'missing',
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            success: false, 
+            error: error.message,
+            stack: error.stack
+        });
+    }
+});
+
 // Register User
 app.post('/api/register', async (req, res) => {
     const { name, email, phone, password } = req.body;
