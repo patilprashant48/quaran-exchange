@@ -90,6 +90,11 @@ function sendOTPEmail(email, otp, name) {
 
 // API Routes
 
+// Simple test endpoint (no DB)
+app.get('/api/ping', (req, res) => {
+    res.json({ success: true, message: 'pong', timestamp: new Date().toISOString() });
+});
+
 // Health check endpoint
 app.get('/api/health', async (req, res) => {
     try {
