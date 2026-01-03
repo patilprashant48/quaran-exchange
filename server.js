@@ -123,22 +123,29 @@ app.get('/api/health', async (req, res) => {
 
 // Register User
 app.post('/api/register', async (req, res) => {
+    console.log('Register endpoint hit:', req.body);
+    
     const { name, email, phone, password } = req.body;
 
     if (!name || (!email && !phone)) {
+        console.log('Validation failed: missing required fields');
         return res.status(400).json({ error: 'Name and email or phone are required' });
     }
 
     try {
+        console.log('Checking for existing user...');
         // Check if user exists
         const existingUser = await User.findOne(email ? { email } : { phone });
         if (existingUser) {
+            console.log('User already exists');
             return res.status(400).json({ error: 'User already exists' });
         }
 
+        console.log('Hashing password...');
         // Hash password if provided
         const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
 
+        console.log('Creating user...');
         // Create user
         const user = await User.create({
             name,
@@ -146,18 +153,21 @@ app.post('/api/register', async (req, res) => {
             phone: phone || null,
             password: hashedPassword
         });
+        console.log('User created:', user._id);
 
         // Generate and send OTP
         const otp = generateOTP();
         const expiryMinutes = parseInt(process.env.OTP_EXPIRY_MINUTES) || 10;
         const expiresAt = new Date(Date.now() + expiryMinutes * 60000);
 
+        console.log('Creating OTP...');
         await OTP.create({
             user_id: user._id,
             code: otp,
             type: email ? 'email' : 'sms',
             expires_at: expiresAt
         });
+        console.log('OTP created:', otp);
 
         // Send OTP
         req.session.pendingUserId = user._id.toString();
@@ -168,6 +178,7 @@ app.post('/api/register', async (req, res) => {
                 console.error('Email error:', err);
             });
             
+            console.log('Sending response for email registration');
             res.json({ 
                 success: true, 
                 message: 'Registration successful. Please check your email for verification code.',
@@ -177,6 +188,7 @@ app.post('/api/register', async (req, res) => {
             });
         } else {
             // For SMS, return OTP in response (in production, send via Twilio)
+            console.log('Sending response for phone registration');
             res.json({ 
                 success: true, 
                 message: 'Registration successful. Your verification code is: ' + otp,
@@ -187,7 +199,8 @@ app.post('/api/register', async (req, res) => {
         }
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ error: 'Server error' });
+        console.error('Error stack:', error.stack);
+        res.status(500).json({ error: 'Server error', details: error.message });
     }
 });
 
