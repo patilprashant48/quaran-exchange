@@ -444,35 +444,21 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <nav class="nav container">
-            <button class="nav-toggle" aria-label="Toggle navigation">
-                <span class="hamburger"></span>
-            </button>
-            <div class="nav-menu">
-                <button class="close-menu" aria-label="Close menu">
-                    <i class="fas fa-times"></i>
-                </button>
-                <div class="nav-content">
-                    <ul class="nav-list">
-                        <li><a href="admin-users.html" class="nav-link">Users</a></li>
-                        <li><a href="admin-payments.html" class="nav-link">Payments</a></li>
-                        <li><a href="admin-submissions.html" class="nav-link active">Submissions</a></li>
-                    </ul>
-                </div>
+    <!-- Admin Header -->
+    <div class="admin-header" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: var(--white); padding: 2rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div class="container">
+            <h1 style="margin: 0; font-size: 2rem;"><i class="fas fa-clipboard-list"></i> Submission Management</h1>
+            <p style="margin: 0.5rem 0 0; opacity: 0.9;">View and manage all customer account detail submissions</p>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+                <a href="admin-users.html" style="color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'"><i class="fas fa-users"></i> Users</a>
+                <a href="admin-payments.html" style="color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; transition: background 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='transparent'"><i class="fas fa-dollar-sign"></i> Payments</a>
+                <a href="admin-submissions.html" style="color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 6px; background: rgba(255,255,255,0.2);"><i class="fas fa-clipboard-list"></i> Submissions</a>
             </div>
-        </nav>
-    </header>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main class="admin-container">
-        <!-- Header -->
-        <div class="admin-header">
-            <h1><i class="fas fa-clipboard-list"></i> Customer Submissions</h1>
-            <p>View and manage all customer account detail submissions</p>
-        </div>
-
         <!-- Statistics -->
         <div class="stats-grid">
             <div class="stat-card">
