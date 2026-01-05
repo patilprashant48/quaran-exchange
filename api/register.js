@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const nodemailer = require('nodemailer');
 
 // MongoDB connection
 let isConnected = false;
@@ -17,6 +18,40 @@ const connectDB = async () => {
     
     isConnected = mongoose.connection.readyState === 1;
 };
+
+// Email transporter
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+// Send OTP Email
+async function sendOTPEmail(email, otp, name) {
+    const mailOptions = {
+        from: `"Qaran Exchange" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: 'Verify Your Qaran Exchange Account',
+        html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <h2 style="color: #1a73e8;">Welcome to Qaran Exchange!</h2>
+                <p>Hi ${name},</p>
+                <p>Thank you for registering with Qaran Exchange. To complete your registration, please use the following verification code:</p>
+                <div style="background-color: #f5f5f5; padding: 20px; text-align: center; margin: 20px 0;">
+                    <h1 style="color: #1a73e8; margin: 0; letter-spacing: 5px;">${otp}</h1>
+                </div>
+                <p>This code will expire in 10 minutes.</p>
+                <p>If you didn't request this code, please ignore this email.</p>
+                <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 20px 0;">
+                <p style="color: #666; font-size: 12px;">This is an automated message from Qaran Exchange. Please do not reply to this email.</p>
+            </div>
+        `
+    };
+    
+    await transporter.sendMail(mailOptions);
+}
 
 // Schemas
 const userSchema = new mongoose.Schema({
@@ -93,13 +128,36 @@ module.exports = async (req, res) => {
             expires_at: expiresAt
         });
         
-        return res.status(200).json({ 
-            success: true, 
-            message: 'Registration successful. Your verification code is: ' + otp,
-            userId: user._id.toString(),
-            verificationType: email ? 'email' : 'sms',
-            otp: otp
-        });
+        // Send OTP email
+        if (email) {
+            try {
+                await sendOTPEmail(email, otp, name);
+                return res.status(200).json({ 
+                    success: true, 
+                    message: 'Registration successful. Please check your email for the verification code.',
+                    userId: user._id.toString(),
+                    verificationType: 'email'
+                });
+            } catch (emailError) {
+                console.error('Email sending failed:', emailError);
+                return res.status(200).json({ 
+                    success: true, 
+                    message: 'Registration successful, but email sending failed. Your verification code is: ' + otp,
+                    userId: user._id.toString(),
+                    verificationType: 'email',
+                    otp: otp
+                });
+            }
+        } else {
+            // For phone registration
+            return res.status(200).json({ 
+                success: true, 
+                message: 'Registration successful. Your verification code is: ' + otp,
+                userId: user._id.toString(),
+                verificationType: 'sms',
+                otp: otp
+            });
+        }
         
     } catch (error) {
         console.error('Registration error:', error);
