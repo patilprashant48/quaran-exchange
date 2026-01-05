@@ -293,7 +293,8 @@
 
             const formData = {
                 identifier: document.getElementById('identifier').value,
-                password: loginMode === 'password' ? document.getElementById('password').value : null
+                password: loginMode === 'password' ? document.getElementById('password').value : null,
+                usePassword: loginMode === 'password'
             };
 
             submitBtn.disabled = true;
@@ -324,8 +325,13 @@
                             window.location.href = 'verify-login.html';
                         }, 2000);
                     } else {
-                        // Direct login success
+                        // Direct login success with password
                         showAlert('Login successful!', 'success');
+                        // Store user data
+                        if (data.user) {
+                            localStorage.setItem('user', JSON.stringify(data.user));
+                            localStorage.setItem('isLoggedIn', 'true');
+                        }
                         setTimeout(() => {
                             window.location.href = 'dashboard.html';
                         }, 1500);
