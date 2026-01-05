@@ -206,6 +206,50 @@
             margin-right: 0.5rem;
         }
         
+        /* Exchange Summary Styles */
+        .exchange-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+        .exchange-flow-item {
+            flex: 1;
+            text-align: center;
+        }
+        .flow-label {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+        .flow-platform {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .flow-platform i {
+            font-size: 1.25rem;
+        }
+        .exchange-flow-arrow {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             .payment-container {
@@ -298,6 +342,31 @@
             .info-box {
                 padding: 0.875rem;
                 font-size: 0.9rem;
+            }
+            
+            .exchange-flow {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .exchange-flow-arrow {
+                transform: rotate(90deg);
+                font-size: 1.25rem;
+                margin: 0;
+            }
+            
+            .flow-label {
+                font-size: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .flow-platform {
+                padding: 0.875rem;
+                font-size: 0.9rem;
+            }
+            
+            .flow-platform i {
+                font-size: 1.1rem;
             }
         }
         
@@ -472,6 +541,44 @@
 
             <div id="alertBox" class="alert"></div>
 
+            <!-- Exchange Summary Card -->
+            <div class="payment-card" id="exchangeSummaryCard" style="display: none;">
+                <h2 class="section-title"><i class="fas fa-exchange-alt"></i> Exchange Summary</h2>
+                
+                <div class="exchange-flow">
+                    <div class="exchange-flow-item">
+                        <div class="flow-label">You're Sending From</div>
+                        <div class="flow-platform" id="sendPlatformDisplay">
+                            <i class="fas fa-wallet"></i>
+                            <span id="sendPlatformName">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="exchange-flow-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    
+                    <div class="exchange-flow-item">
+                        <div class="flow-label">You'll Receive In</div>
+                        <div class="flow-platform" id="receivePlatformDisplay">
+                            <i class="fas fa-wallet"></i>
+                            <span id="receivePlatformName">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: #fff3cd; border-color: #ffc107;">
+                    <i class="fas fa-lightbulb"></i>
+                    <strong>How it works:</strong>
+                    <ol style="margin: 0.5rem 0 0 1.25rem; padding: 0;">
+                        <li>Select your payment method below</li>
+                        <li>Fill in the required payment details</li>
+                        <li>Submit your payment information</li>
+                        <li>We'll process and send to your receiving platform</li>
+                    </ol>
+                </div>
+            </div>
+
             <div class="payment-card">
                 <h2 class="section-title"><i class="fas fa-wallet"></i> Select Payment Method</h2>
                 
@@ -618,6 +725,52 @@
     <script src="js/main.js"></script>
     <script src="js/auth.js"></script>
     <script>
+        // Platform name mapping
+        const platformNames = {
+            'btc': 'Bitcoin BTC',
+            'eth': 'Ethereum ETH',
+            'evcplus': 'EVC Plus',
+            'zaad': 'Zaad',
+            'premier': 'Premier Wallet',
+            '1xbet': '1XBET',
+            'melbet': 'Melbet',
+            'moneygo': 'Moneygo',
+            'usdt-trc20': 'USDT (TRC20)',
+            'usdt-erc20': 'USDT (ERC20)',
+            'usdt-bep20': 'USDT (BEP20)',
+            'edahap': 'Edahap'
+        };
+
+        // Load exchange selection from localStorage
+        const exchangeFrom = localStorage.getItem('exchangeFrom');
+        const exchangeTo = localStorage.getItem('exchangeTo');
+
+        if (exchangeFrom && exchangeTo) {
+            // Show exchange summary card
+            document.getElementById('exchangeSummaryCard').style.display = 'block';
+            
+            // Update display
+            const sendPlatformName = platformNames[exchangeFrom] || exchangeFrom.toUpperCase();
+            const receivePlatformName = platformNames[exchangeTo] || exchangeTo.toUpperCase();
+            
+            document.getElementById('sendPlatformName').textContent = sendPlatformName;
+            document.getElementById('receivePlatformName').textContent = receivePlatformName;
+            
+            // Auto-fill exchange type
+            const exchangeTypeSelect = document.getElementById('exchangeType');
+            if (exchangeFrom.includes('usdt') || exchangeTo.includes('usdt')) {
+                if (exchangeFrom.includes('usdt')) {
+                    exchangeTypeSelect.value = 'usdt-to-mobile';
+                } else {
+                    exchangeTypeSelect.value = 'mobile-to-usdt';
+                }
+            } else if (exchangeFrom === '1xbet' || exchangeTo === '1xbet' || exchangeFrom === 'melbet' || exchangeTo === 'melbet') {
+                exchangeTypeSelect.value = 'betting-wallet';
+            } else {
+                exchangeTypeSelect.value = 'mobile-to-mobile';
+            }
+        }
+
         let selectedMethod = null;
         const paymentMethods = document.querySelectorAll('.payment-method');
         const form = document.getElementById('paymentForm');
