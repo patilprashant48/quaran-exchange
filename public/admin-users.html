@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Qaran Exchange Admin</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-container {
+            min-height: 100vh;
+            background: #f5f7fa;
+        }
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .admin-header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        .admin-header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+        }
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .admin-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+        .admin-nav a:hover,
+        .admin-nav a.active {
+            background: rgba(255,255,255,0.2);
+        }
+        .admin-content {
+            padding: 2rem 0;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .stat-icon.blue { background: rgba(26, 115, 232, 0.1); color: var(--primary-color); }
+        .stat-icon.green { background: rgba(52, 168, 83, 0.1); color: #34a853; }
+        .stat-icon.orange { background: rgba(251, 188, 5, 0.1); color: #fbbc05; }
+        .stat-info h4 {
+            margin: 0;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+        .stat-info p {
+            margin: 0.5rem 0 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        .content-card {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 2rem;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--dark-color);
+        }
+        .btn-export {
+            padding: 0.625rem 1.25rem;
+            background: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        thead {
+            background: var(--light-color);
+        }
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark-color);
+            border-bottom: 2px solid var(--border-color);
+        }
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--light-color);
+        }
+        tr:hover {
+            background: var(--light-color);
+        }
+        .verified-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .verified-yes {
+            background: #d4edda;
+            color: #155724;
+        }
+        .verified-no {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+        }
+        .no-data i {
+            font-size: 4rem;
+            color: var(--border-color);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <div class="container">
+                <h1><i class="fas fa-users"></i> User Management</h1>
+                <p>Monitor all registered users</p>
+                <div class="admin-nav">
+                    <a href="admin-users.html" class="active"><i class="fas fa-users"></i> Users</a>
+                    <a href="admin-payments.html"><i class="fas fa-dollar-sign"></i> Payments</a>
+                    <a href="admin-submissions.html"><i class="fas fa-clipboard-list"></i> Submissions</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Total Users</h4>
+                            <p id="totalUsers">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Verified Users</h4>
+                            <p id="verifiedUsers">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Unverified Users</h4>
+                            <p id="unverifiedUsers">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-list"></i> All Users</h2>
+                        <button class="btn-export" onclick="exportToCSV()">
+                            <i class="fas fa-download"></i> Export CSV
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Verified</th>
+                                    <th>Registration Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="5" class="no-data">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p>Loading users...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allUsers = [];
+
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/users/all');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+
+                if (data.success) {
+                    allUsers = data.users || [];
+                    updateStatistics();
+                    displayUsers();
+                } else {
+                    throw new Error(data.error || 'Failed to load users');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNoData('Error loading users');
+            }
+        }
+
+        function updateStatistics() {
+            const total = allUsers.length;
+            const verified = allUsers.filter(u => u.is_verified).length;
+            const unverified = total - verified;
+
+            document.getElementById('totalUsers').textContent = total;
+            document.getElementById('verifiedUsers').textContent = verified;
+            document.getElementById('unverifiedUsers').textContent = unverified;
+        }
+
+        function displayUsers() {
+            const tbody = document.getElementById('usersTableBody');
+            
+            if (allUsers.length === 0) {
+                showNoData('No users found');
+                return;
+            }
+
+            tbody.innerHTML = allUsers.map(user => `
+                <tr>
+                    <td><strong>${user.name}</strong></td>
+                    <td>${user.email || '-'}</td>
+                    <td>${user.phone || '-'}</td>
+                    <td>
+                        <span class="verified-badge ${user.is_verified ? 'verified-yes' : 'verified-no'}">
+                            ${user.is_verified ? 'Verified' : 'Unverified'}
+                        </span>
+                    </td>
+                    <td>${new Date(user.created_at).toLocaleString()}</td>
+                </tr>
+            `).join('');
+        }
+
+        function showNoData(message) {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="no-data">
+                        <i class="fas fa-inbox"></i>
+                        <p>${message}</p>
+                    </td>
+                </tr>
+            `;
+        }
+
+        function exportToCSV() {
+            const headers = ['Name', 'Email', 'Phone', 'Verified', 'Registration Date'];
+            const rows = allUsers.map(u => [
+                u.name,
+                u.email || '',
+                u.phone || '',
+                u.is_verified ? 'Yes' : 'No',
+                new Date(u.created_at).toLocaleString()
+            ]);
+
+            let csv = headers.join(',') + '\n';
+            rows.forEach(row => {
+                csv += row.map(field => `"${field}"`).join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `users_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        // Load users on page load
+        loadUsers();
+
+        // Refresh every 30 seconds
+        setInterval(loadUsers, 30000);
+    </script>
+</body>
+</html>
