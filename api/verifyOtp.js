@@ -82,9 +82,18 @@ module.exports = async (req, res) => {
         // Mark user as verified
         await User.updateOne({ _id: userId }, { is_verified: true });
         
+        // Get user details
+        const user = await User.findById(userId);
+        
         return res.status(200).json({ 
             success: true, 
-            message: 'Account verified successfully'
+            message: 'Account verified successfully',
+            user: {
+                id: user._id.toString(),
+                name: user.name,
+                email: user.email,
+                phone: user.phone
+            }
         });
         
     } catch (error) {
