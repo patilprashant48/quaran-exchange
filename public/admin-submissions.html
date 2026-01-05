@@ -617,26 +617,25 @@
         async function loadSubmissions() {
             try {
                 const response = await fetch('/api/submissions/all');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
 
                 if (data.success) {
-                    allSubmissions = data.submissions;
+                    allSubmissions = data.submissions || [];
                     displaySubmissions(allSubmissions);
                     updateStatistics(allSubmissions);
+                } else {
+                    throw new Error(data.error || 'Failed to load submissions');
                 }
             } catch (error) {
                 console.error('Error loading submissions:', error);
-                document.getElementById('submissionsBody').innerHTML = `
-                    <tr>
-                        <td colspan="8">
-                            <div class="empty-state">
-                                <i class="fas fa-exclamation-circle"></i>
-                                <h3>Error loading submissions</h3>
-                                <p>Please check your connection and try again.</p>
-                            </div>
-                        </td>
-                    </tr>
-                `;
+                allSubmissions = [];
+                displaySubmissions([]);
+                updateStatistics([]);
             }
         }
 
