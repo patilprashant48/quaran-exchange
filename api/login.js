@@ -59,11 +59,15 @@ async function sendOTPEmail(email, otp, name) {
 // Schemas
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    email: { type: String, unique: true, sparse: true },
-    phone: { type: String, unique: true, sparse: true },
+    email: { type: String, sparse: true },
+    phone: { type: String, sparse: true },
     password: String,
     is_verified: { type: Boolean, default: false },
 }, { timestamps: true });
+
+// Create compound unique index for email and phone
+userSchema.index({ email: 1 }, { unique: true, sparse: true, partialFilterExpression: { email: { $type: 'string' } } });
+userSchema.index({ phone: 1 }, { unique: true, sparse: true, partialFilterExpression: { phone: { $type: 'string' } } });
 
 const otpSchema = new mongoose.Schema({
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
