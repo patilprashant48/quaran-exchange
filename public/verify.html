@@ -159,11 +159,6 @@
 
             <div id="alertBox" class="alert"></div>
 
-            <div id="demoNote" class="demo-note" style="display: none;">
-                <strong><i class="fas fa-info-circle"></i> Demo Mode</strong>
-                Your verification code: <span id="demoOtpDisplay" style="font-weight: 600; font-size: 1.1rem;"></span>
-            </div>
-
             <form id="verifyForm">
                 <div class="otp-inputs">
                     <input type="text" maxlength="1" class="otp-input" id="otp1" required>
@@ -195,8 +190,6 @@
         const resendBtn = document.getElementById('resendBtn');
         const timerDisplay = document.getElementById('timer');
         const otpInputs = document.querySelectorAll('.otp-input');
-        const demoNote = document.getElementById('demoNote');
-        const demoOtpDisplay = document.getElementById('demoOtpDisplay');
 
         let timeLeft = 60;
         let timerInterval;
@@ -204,7 +197,6 @@
         // Check if user came from registration
         const userId = localStorage.getItem('pendingUserId');
         const verificationType = localStorage.getItem('verificationType');
-        const demoOTP = localStorage.getItem('demoOTP');
 
         if (!userId) {
             window.location.href = 'register.html';
@@ -213,12 +205,6 @@
         // Update verification message
         if (verificationType === 'phone') {
             document.getElementById('verificationMessage').textContent = 'Enter the 6-digit code sent to your phone';
-        }
-
-        // Show demo OTP if available
-        if (demoOTP) {
-            demoNote.style.display = 'block';
-            demoOtpDisplay.textContent = demoOTP;
         }
 
         // OTP input handling
@@ -302,7 +288,6 @@
                     // Clear stored data
                     localStorage.removeItem('pendingUserId');
                     localStorage.removeItem('verificationType');
-                    localStorage.removeItem('demoOTP');
                     // Redirect to dashboard or home
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
@@ -343,11 +328,6 @@
 
                 if (data.success) {
                     showAlert('Verification code sent successfully!', 'success');
-                    if (data.otp) {
-                        demoNote.style.display = 'block';
-                        demoOtpDisplay.textContent = data.otp;
-                        localStorage.setItem('demoOTP', data.otp);
-                    }
                     startTimer();
                 } else {
                     showAlert(data.error || 'Failed to resend code', 'error');

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
+const twilio = require('twilio');
 
 // MongoDB connection
 let isConnected = false;
@@ -18,6 +19,21 @@ const connectDB = async () => {
     
     isConnected = mongoose.connection.readyState === 1;
 };
+
+// Send OTP via SMS using Twilio
+async function sendOTPSMS(phone, otp, name) {
+    if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN || !process.env.TWILIO_PHONE_NUMBER) {
+        throw new Error('Twilio SMS not configured');
+    }
+    
+    const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    
+    await client.messages.create({
+        body: `Hi ${name}, your Qaran Exchange login code is: ${otp}. This code expires in 10 minutes. Do not share this code with anyone.`,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: phone
+    });
+}
 
 // Send OTP Email
 async function sendOTPEmail(email, otp, name) {
@@ -172,24 +188,28 @@ module.exports = async (req, res) => {
                 });
             } catch (emailError) {
                 console.error('Email sending failed:', emailError);
-                return res.status(200).json({
-                    success: true,
-                    requiresOTP: true,
-                    message: 'Your verification code is: ' + otp,
-                    userId: user._id.toString(),
-                    verificationType: 'email',
-                    otp: otp
+                return res.status(500).json({
+                    success: false,
+                    error: 'Failed to send OTP email. Please try again.'
                 });
             }
         } else {
-            return res.status(200).json({
-                success: true,
-                requiresOTP: true,
-                message: 'Your verification code is: ' + otp,
-                userId: user._id.toString(),
-                verificationType: 'sms',
-                otp: otp
-            });
+            try {
+                await sendOTPSMS(user.phone, otp, user.name);
+                return res.status(200).json({
+                    success: true,
+                    requiresOTP: true,
+                    message: 'OTP sent to your phone',
+                    userId: user._id.toString(),
+                    verificationType: 'sms'
+                });
+            } catch (smsError) {
+                console.error('SMS sending failed:', smsError);
+                return res.status(500).json({
+                    success: false,
+                    error: 'Failed to send OTP SMS. Please check your phone number or try email login.'
+                });
+            }
         }
         
     } catch (error) {

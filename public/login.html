@@ -214,15 +214,6 @@
             background: rgba(26, 115, 232, 0.1);
             color: var(--primary-color);
         }
-        .phone-note {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-            padding: 0.75rem;
-            border-radius: 6px;
-            margin-top: 0.5rem;
-            font-size: 0.85rem;
-        }
     </style>
 </head>
 <body>
@@ -261,9 +252,6 @@
                     <div class="input-icon">
                         <i class="fas fa-mobile-alt" id="identifierIcon"></i>
                         <input type="tel" id="identifier" name="identifier" required placeholder="Enter your mobile number">
-                    </div>
-                    <div class="phone-note" id="phoneNote">
-                        <i class="fas fa-info-circle"></i> The OTP will be displayed on screen (SMS service not configured)
                     </div>
                 </div>
 
@@ -305,7 +293,6 @@
         const identifierInput = document.getElementById('identifier');
         const identifierLabel = document.getElementById('identifierLabel');
         const identifierIcon = document.getElementById('identifierIcon');
-        const phoneNote = document.getElementById('phoneNote');
 
         let loginMode = 'password'; // 'password' or 'otp'
         let identifierType = 'phone'; // 'phone' or 'email'
@@ -319,7 +306,6 @@
             identifierInput.placeholder = 'Enter your mobile number';
             identifierLabel.innerHTML = 'Mobile Number *';
             identifierIcon.className = 'fas fa-mobile-alt';
-            phoneNote.style.display = 'block';
         });
 
         emailBtn.addEventListener('click', () => {
@@ -330,7 +316,6 @@
             identifierInput.placeholder = 'Enter your email address';
             identifierLabel.innerHTML = 'Email Address *';
             identifierIcon.className = 'fas fa-envelope';
-            phoneNote.style.display = 'none';
         });
 
         // Toggle login mode
@@ -390,12 +375,9 @@
                 if (data.success) {
                     if (data.requiresOTP) {
                         // OTP sent, redirect to verification
-                        showAlert('Verification code sent! Check your ' + (data.verificationType === 'email' ? 'email' : 'phone'), 'success');
+                        showAlert(data.message, 'success');
                         localStorage.setItem('pendingUserId', data.userId);
                         localStorage.setItem('verificationType', data.verificationType);
-                        if (data.otp) {
-                            localStorage.setItem('demoOTP', data.otp);
-                        }
                         setTimeout(() => {
                             window.location.href = 'verify-login.html';
                         }, 2000);

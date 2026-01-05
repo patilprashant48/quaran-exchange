@@ -301,9 +301,6 @@
                     // Store userId for verification page
                     localStorage.setItem('pendingUserId', data.userId);
                     localStorage.setItem('verificationType', data.verificationType);
-                    if (data.otp) {
-                        localStorage.setItem('demoOTP', data.otp);
-                    }
                     // Redirect to verification page
                     setTimeout(() => {
                         window.location.href = 'verify.html';

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
+const twilio = require('twilio');
 
 // MongoDB connection
 let isConnected = false;
@@ -18,6 +19,21 @@ const connectDB = async () => {
     
     isConnected = mongoose.connection.readyState === 1;
 };
+
+// Send OTP via SMS using Twilio
+async function sendOTPSMS(phone, otp, name) {
+    if (!process.env.TWILIO_ACCOUNT_SID || !process.env.TWILIO_AUTH_TOKEN || !process.env.TWILIO_PHONE_NUMBER) {
+        throw new Error('Twilio SMS not configured');
+    }
+    
+    const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+    
+    await client.messages.create({
+        body: `Welcome to Qaran Exchange, ${name}! Your verification code is: ${otp}. This code expires in 10 minutes.`,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: phone
+    });
+}
 
 // Send OTP Email
 async function sendOTPEmail(email, otp, name) {
@@ -135,7 +151,7 @@ module.exports = async (req, res) => {
             expires_at: expiresAt
         });
         
-        // Send OTP email
+        // Send OTP
         if (email) {
             try {
                 await sendOTPEmail(email, otp, name);
@@ -147,23 +163,34 @@ module.exports = async (req, res) => {
                 });
             } catch (emailError) {
                 console.error('Email sending failed:', emailError);
-                return res.status(200).json({ 
-                    success: true, 
-                    message: 'Registration successful, but email sending failed. Your verification code is: ' + otp,
-                    userId: user._id.toString(),
-                    verificationType: 'email',
-                    otp: otp
+                // Delete the created user if email fails
+                await User.findByIdAndDelete(user._id);
+                await OTP.deleteMany({ user_id: user._id });
+                return res.status(500).json({ 
+                    success: false,
+                    error: 'Failed to send verification email. Please try again.'
                 });
             }
         } else {
             // For phone registration
-            return res.status(200).json({ 
-                success: true, 
-                message: 'Registration successful. Your verification code is: ' + otp,
-                userId: user._id.toString(),
-                verificationType: 'sms',
-                otp: otp
-            });
+            try {
+                await sendOTPSMS(phone, otp, name);
+                return res.status(200).json({ 
+                    success: true, 
+                    message: 'Registration successful. Please check your phone for the verification code.',
+                    userId: user._id.toString(),
+                    verificationType: 'sms'
+                });
+            } catch (smsError) {
+                console.error('SMS sending failed:', smsError);
+                // Delete the created user if SMS fails
+                await User.findByIdAndDelete(user._id);
+                await OTP.deleteMany({ user_id: user._id });
+                return res.status(500).json({ 
+                    success: false,
+                    error: 'Failed to send verification SMS. Please check your phone number or try email registration.'
+                });
+            }
         }
         
     } catch (error) {

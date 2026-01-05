@@ -25,7 +25,8 @@
     "helmet": "^7.1.0",
     "mongoose": "^7.8.8",
     "nodemailer": "^6.9.7",
-    "serverless-http": "^2.7.0"
+    "serverless-http": "^2.7.0",
+    "twilio": "^4.19.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
