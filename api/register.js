@@ -19,17 +19,20 @@ const connectDB = async () => {
     isConnected = mongoose.connection.readyState === 1;
 };
 
-// Email transporter
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
-
 // Send OTP Email
 async function sendOTPEmail(email, otp, name) {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        throw new Error('Email not configured');
+    }
+    
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
+    
     const mailOptions = {
         from: `"Qaran Exchange" <${process.env.EMAIL_USER}>`,
         to: email,
