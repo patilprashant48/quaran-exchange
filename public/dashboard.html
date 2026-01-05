@@ -330,20 +330,20 @@
         let currentUser = null;
 
         // Check if user is logged in
-        async function checkSession() {
+        function checkSession() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userStr = localStorage.getItem('user');
+            
+            if (!isLoggedIn || !userStr) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
             try {
-                const response = await fetch('/api/check-session');
-                const data = await response.json();
-
-                if (!data.authenticated) {
-                    window.location.href = 'login.html';
-                    return;
-                }
-
-                currentUser = data.user;
+                currentUser = JSON.parse(userStr);
                 updateUserInfo();
             } catch (error) {
-                console.error('Error checking session:', error);
+                console.error('Error parsing user data:', error);
                 window.location.href = 'login.html';
             }
         }
