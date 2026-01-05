@@ -165,6 +165,7 @@ module.exports = async (req, res) => {
                 await sendOTPEmail(user.email, otp, user.name);
                 return res.status(200).json({
                     success: true,
+                    requiresOTP: true,
                     message: 'OTP sent to your email',
                     userId: user._id.toString(),
                     verificationType: 'email'
@@ -173,6 +174,7 @@ module.exports = async (req, res) => {
                 console.error('Email sending failed:', emailError);
                 return res.status(200).json({
                     success: true,
+                    requiresOTP: true,
                     message: 'Your verification code is: ' + otp,
                     userId: user._id.toString(),
                     verificationType: 'email',
@@ -182,6 +184,7 @@ module.exports = async (req, res) => {
         } else {
             return res.status(200).json({
                 success: true,
+                requiresOTP: true,
                 message: 'Your verification code is: ' + otp,
                 userId: user._id.toString(),
                 verificationType: 'sms',
