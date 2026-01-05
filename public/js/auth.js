@@ -6,22 +6,22 @@
 
     let currentUser = null;
 
-    // Check if user is authenticated
-    async function checkAuth() {
+    // Check if user is authenticated using localStorage
+    function checkAuth() {
         try {
-            const response = await fetch('/api/check-session');
-            const data = await response.json();
-
-            if (data.authenticated && data.user) {
-                currentUser = data.user;
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userStr = localStorage.getItem('user');
+            
+            if (isLoggedIn === 'true' && userStr) {
+                currentUser = JSON.parse(userStr);
                 updateNavigation(true);
             } else {
                 currentUser = null;
                 updateNavigation(false);
             }
         } catch (error) {
-            // Server might not be running or endpoint not available
-            console.log('Authentication check skipped:', error.message);
+            console.log('Authentication check error:', error.message);
+            currentUser = null;
             updateNavigation(false);
         }
     }
@@ -80,28 +80,26 @@
     }
 
     // Handle logout
-    async function handleLogout() {
+    function handleLogout() {
         try {
-            const response = await fetch('/api/logout', {
-                method: 'POST'
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                currentUser = null;
-                updateNavigation(false);
-                // Redirect to home if on protected page
-                if (window.location.pathname.includes('dashboard')) {
-                    window.location.href = 'index.html';
-                } else {
-                    // Reload current page to update UI
-                    window.location.reload();
-                }
+            // Clear localStorage
+            localStorage.removeItem('user');
+            localStorage.removeItem('isLoggedIn');
+            
+            currentUser = null;
+            updateNavigation(false);
+            
+            // Redirect to home if on protected page
+            if (window.location.pathname.includes('dashboard')) {
+                window.location.href = 'index.html';
+            } else {
+                // Reload current page to update UI
+                window.location.reload();
             }
         } catch (error) {
             console.error('Logout error:', error);
-            // Even if server fails, clear client state
+            // Clear and redirect anyway
+            localStorage.clear();
             window.location.href = 'index.html';
         }
     }
