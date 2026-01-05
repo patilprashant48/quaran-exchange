@@ -22,6 +22,10 @@ const connectDB = async () => {
 // Send OTP Email
 async function sendOTPEmail(email, otp, name) {
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.error('Email credentials missing:', {
+            hasUser: !!process.env.EMAIL_USER,
+            hasPass: !!process.env.EMAIL_PASS
+        });
         throw new Error('Email not configured');
     }
     
@@ -30,6 +34,9 @@ async function sendOTPEmail(email, otp, name) {
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
+        },
+        tls: {
+            rejectUnauthorized: false
         }
     });
     
@@ -53,7 +60,14 @@ async function sendOTPEmail(email, otp, name) {
         `
     };
     
-    await transporter.sendMail(mailOptions);
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully:', info.messageId);
+        return info;
+    } catch (error) {
+        console.error('Email sending error:', error.message);
+        throw error;
+    }
 }
 
 // Schemas
