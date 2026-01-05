@@ -182,30 +182,12 @@
                     </div>
                 </div>
 
-                <div class="form-group" id="emailGroup">
+                <div class="form-group">
                     <label for="email">Email Address *</label>
                     <div class="input-icon">
                         <i class="fas fa-envelope"></i>
-                        <input type="email" id="email" name="email" placeholder="Enter your email">
+                        <input type="email" id="email" name="email" required placeholder="Enter your email">
                     </div>
-                </div>
-
-                <div class="form-group" id="phoneGroup" style="display: none;">
-                    <label for="phone">Phone Number *</label>
-                    <div class="input-icon">
-                        <i class="fas fa-phone"></i>
-                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
-                    </div>
-                </div>
-
-                <div class="toggle-input">
-                    <button type="button" id="toggleInput">
-                        <i class="fas fa-exchange-alt"></i> Use phone number instead
-                    </button>
-                </div>
-
-                <div class="auth-divider">
-                    <span>Optional</span>
                 </div>
 
                 <div class="form-group">
@@ -234,33 +216,6 @@
         const form = document.getElementById('registerForm');
         const alertBox = document.getElementById('alertBox');
         const submitBtn = document.getElementById('submitBtn');
-        const toggleBtn = document.getElementById('toggleInput');
-        const emailGroup = document.getElementById('emailGroup');
-        const phoneGroup = document.getElementById('phoneGroup');
-        const emailInput = document.getElementById('email');
-        const phoneInput = document.getElementById('phone');
-
-        let useEmail = true;
-
-        // Toggle between email and phone input
-        toggleBtn.addEventListener('click', () => {
-            useEmail = !useEmail;
-            if (useEmail) {
-                emailGroup.style.display = 'block';
-                phoneGroup.style.display = 'none';
-                emailInput.required = true;
-                phoneInput.required = false;
-                phoneInput.value = '';
-                toggleBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Use phone number instead';
-            } else {
-                emailGroup.style.display = 'none';
-                phoneGroup.style.display = 'block';
-                emailInput.required = false;
-                phoneInput.required = true;
-                emailInput.value = '';
-                toggleBtn.innerHTML = '<i class="fas fa-exchange-alt"></i> Use email instead';
-            }
-        });
 
         // Show alert message
         function showAlert(message, type) {
@@ -277,8 +232,7 @@
 
             const formData = {
                 name: document.getElementById('name').value,
-                email: useEmail ? document.getElementById('email').value : null,
-                phone: !useEmail ? document.getElementById('phone').value : null,
+                email: document.getElementById('email').value,
                 password: document.getElementById('password').value || null
             };
 
