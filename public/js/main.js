@@ -349,3 +349,58 @@ const statsSection = document.querySelector('.stats-section');
 if (statsSection) {
     statsObserver.observe(statsSection);
 }
+// Platform Exchange Selector
+let selectedSendPlatform = null;
+let selectedReceivePlatform = null;
+
+// Handle platform selection
+document.addEventListener('DOMContentLoaded', function() {
+    const platformCards = document.querySelectorAll('.platform-card');
+    
+    platformCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const column = this.closest('.exchange-column');
+            const isSendColumn = column.querySelector('h3').textContent.includes('Send');
+            
+            // Remove selection from cards in the same column
+            column.querySelectorAll('.platform-card').forEach(c => {
+                c.classList.remove('selected');
+            });
+            
+            // Select current card
+            this.classList.add('selected');
+            
+            // Store selection
+            const platform = this.dataset.platform;
+            if (isSendColumn) {
+                selectedSendPlatform = platform;
+            } else {
+                selectedReceivePlatform = platform;
+            }
+        });
+    });
+});
+
+// Proceed to Exchange
+function proceedToExchange() {
+    if (!selectedSendPlatform || !selectedReceivePlatform) {
+        alert('Please select both sending and receiving platforms');
+        return;
+    }
+    
+    // Store exchange selection in localStorage
+    localStorage.setItem('exchangeFrom', selectedSendPlatform);
+    localStorage.setItem('exchangeTo', selectedReceivePlatform);
+    
+    // Check if user is logged in
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    
+    if (isLoggedIn === 'true') {
+        // Go to payment page
+        window.location.href = 'payment.html';
+    } else {
+        // Go to login page
+        alert('Please login to continue with the exchange');
+        window.location.href = 'login.html';
+    }
+}

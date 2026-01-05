@@ -1915,22 +1915,210 @@ section {
     .platform-card {
         padding: 1.25rem;
     }
+    
+    .exchange-container {
+        flex-direction: column;
+    }
+    
+    .exchange-arrow {
+        transform: rotate(90deg);
+        margin: 2rem 0;
+    }
+    
+    .platform-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
-/* Print Styles */
-@media print {
-    .header,
-    .chat-widget,
-    .hero-buttons,
-    .cta {
-        display: none;
-    }
+/* Exchange Platform Selector Styles */
+.exchange-platform-section {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 4rem 0;
+    margin: 2rem 0;
+}
 
-    body {
-        color: #000;
-    }
+.exchange-platform-section .section-title {
+    font-size: 2rem;
+    color: var(--dark-color);
+    text-align: center;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
 
-    .container {
-        max-width: 100%;
+.exchange-platform-section .section-subtitle {
+    text-align: center;
+    color: var(--text-color);
+    margin-bottom: 3rem;
+    font-size: 1.1rem;
+}
+
+.exchange-container {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.exchange-column {
+    flex: 1;
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    max-width: 450px;
+}
+
+.exchange-column h3 {
+    font-size: 1.5rem;
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.platform-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.platform-card {
+    background: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.platform-card:hover {
+    border-color: var(--primary-color);
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 115, 232, 0.15);
+}
+
+.platform-card.selected {
+    border-color: var(--primary-color);
+    background: #e8f0fe;
+}
+
+.platform-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    position: relative;
+}
+
+.platform-icon img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.platform-icon.bitcoin {
+    background: linear-gradient(135deg, #f7931a 0%, #f79c1a 100%);
+    color: white;
+}
+
+.platform-icon.ethereum {
+    background: linear-gradient(135deg, #627eea 0%, #8a9fea 100%);
+    color: white;
+}
+
+.platform-icon.usdt {
+    background: linear-gradient(135deg, #26a17b 0%, #50af95 100%);
+    color: white;
+    font-size: 1.5rem;
+}
+
+.network-badge {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background: white;
+    color: white;
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-weight: bold;
+    border: 2px solid white;
+}
+
+.network-badge.trc20 {
+    background: #c23631;
+}
+
+.network-badge.erc20 {
+    background: #627eea;
+}
+
+.network-badge.bep20 {
+    background: #f3ba2f;
+}
+
+.platform-name {
+    font-size: 0.9rem;
+    color: var(--dark-color);
+    font-weight: 500;
+    text-align: center;
+}
+
+.exchange-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-top: 4rem;
+}
+
+.exchange-arrow i {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
     }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.exchange-action {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.btn-exchange {
+    padding: 1rem 3rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #1557b0 100%);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
+}
+
+.btn-exchange:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4);
+}
+
+.btn-exchange i {
+    margin-left: 0.5rem;
 }
