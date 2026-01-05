@@ -189,6 +189,40 @@
             margin-bottom: 1rem;
             font-size: 0.9rem;
         }
+        .input-type-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .input-type-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: 2px solid var(--border-color);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: all 0.3s;
+        }
+        .input-type-btn:hover {
+            border-color: var(--primary-color);
+        }
+        .input-type-btn.active {
+            border-color: var(--primary-color);
+            background: rgba(26, 115, 232, 0.1);
+            color: var(--primary-color);
+        }
+        .phone-note {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
@@ -215,10 +249,21 @@
 
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="identifier">Email or Phone Number *</label>
+                    <label for="identifier" id="identifierLabel">Mobile Number *</label>
+                    <div class="input-type-toggle">
+                        <button type="button" class="input-type-btn active" id="phoneBtn">
+                            <i class="fas fa-mobile-alt"></i> Mobile Number
+                        </button>
+                        <button type="button" class="input-type-btn" id="emailBtn">
+                            <i class="fas fa-envelope"></i> Email Address
+                        </button>
+                    </div>
                     <div class="input-icon">
-                        <i class="fas fa-user"></i>
-                        <input type="text" id="identifier" name="identifier" required placeholder="Enter your email or phone">
+                        <i class="fas fa-mobile-alt" id="identifierIcon"></i>
+                        <input type="tel" id="identifier" name="identifier" required placeholder="Enter your mobile number">
+                    </div>
+                    <div class="phone-note" id="phoneNote">
+                        <i class="fas fa-info-circle"></i> The OTP will be displayed on screen (SMS service not configured)
                     </div>
                 </div>
 
@@ -255,8 +300,38 @@
         const otpOption = document.getElementById('otpOption');
         const passwordGroup = document.getElementById('passwordGroup');
         const passwordInput = document.getElementById('password');
+        const phoneBtn = document.getElementById('phoneBtn');
+        const emailBtn = document.getElementById('emailBtn');
+        const identifierInput = document.getElementById('identifier');
+        const identifierLabel = document.getElementById('identifierLabel');
+        const identifierIcon = document.getElementById('identifierIcon');
+        const phoneNote = document.getElementById('phoneNote');
 
         let loginMode = 'password'; // 'password' or 'otp'
+        let identifierType = 'phone'; // 'phone' or 'email'
+
+        // Toggle identifier type
+        phoneBtn.addEventListener('click', () => {
+            identifierType = 'phone';
+            phoneBtn.classList.add('active');
+            emailBtn.classList.remove('active');
+            identifierInput.type = 'tel';
+            identifierInput.placeholder = 'Enter your mobile number';
+            identifierLabel.innerHTML = 'Mobile Number *';
+            identifierIcon.className = 'fas fa-mobile-alt';
+            phoneNote.style.display = 'block';
+        });
+
+        emailBtn.addEventListener('click', () => {
+            identifierType = 'email';
+            emailBtn.classList.add('active');
+            phoneBtn.classList.remove('active');
+            identifierInput.type = 'email';
+            identifierInput.placeholder = 'Enter your email address';
+            identifierLabel.innerHTML = 'Email Address *';
+            identifierIcon.className = 'fas fa-envelope';
+            phoneNote.style.display = 'none';
+        });
 
         // Toggle login mode
         passwordOption.addEventListener('click', () => {
