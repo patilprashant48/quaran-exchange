@@ -114,6 +114,7 @@ module.exports = async (req, res) => {
     
     try {
         const { name, email, password } = req.body;
+        console.log('Registration attempt:', { name, email: email?.substring(0, 5) + '***' });
         
         if (!name || !email) {
             return res.status(400).json({ error: 'Name and email are required' });
@@ -173,5 +174,12 @@ module.exports = async (req, res) => {
                 error: 'Failed to send verification email. Please try again.'
             });
         }
-
+    } catch (error) {
+        console.error('Registration error:', error.message);
+        console.error('Error stack:', error.stack);
+        return res.status(500).json({ 
+            success: false,
+            error: 'An error occurred. Please try again.' 
+        });
+    }
 };
