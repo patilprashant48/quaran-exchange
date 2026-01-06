@@ -250,6 +250,105 @@
             50% { transform: scale(1.1); opacity: 1; }
         }
         
+        /* USDT Payment Instructions Styles */
+        .usdt-payment-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #26a17b;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+        }
+        .usdt-title {
+            color: #26a17b;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .usdt-title i {
+            margin-right: 0.5rem;
+        }
+        .usdt-network-info {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .network-badge-large {
+            display: inline-block;
+            background: linear-gradient(135deg, #f3ba2f, #f0b90b);
+            color: #000;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .usdt-wallet-section {
+            margin-bottom: 1.5rem;
+        }
+        .usdt-wallet-section label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+        .wallet-address-box {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .wallet-address-box input {
+            flex: 1;
+            padding: 0.875rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            background: white;
+        }
+        .btn-copy {
+            padding: 0.875rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .btn-copy:hover {
+            background: #0d47a1;
+            transform: translateY(-2px);
+        }
+        .usdt-warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #856404;
+        }
+        .usdt-warning i {
+            margin-right: 0.5rem;
+            color: #ffc107;
+        }
+        .usdt-steps {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .usdt-steps h4 {
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+        .usdt-steps ol {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        .usdt-steps li {
+            margin-bottom: 0.75rem;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             .payment-container {
@@ -466,6 +565,91 @@
                 padding: 0.75rem;
                 font-size: 0.85rem;
             }
+            
+            .usdt-payment-card {
+                padding: 1.25rem;
+            }
+            
+            .usdt-title {
+                font-size: 1.1rem;
+            }
+            
+            .network-badge-large {
+                font-size: 0.9rem;
+                padding: 0.625rem 1.25rem;
+            }
+            
+            .wallet-address-box {
+                flex-direction: column;
+            }
+            
+            .wallet-address-box input {
+                font-size: 0.8rem;
+                padding: 0.75rem;
+            }
+            
+            .btn-copy {
+                width: 100%;
+                padding: 0.75rem;
+            }
+            
+            .usdt-steps {
+                padding: 1rem;
+            }
+            
+            .usdt-steps li {
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .usdt-payment-card {
+                padding: 1rem;
+            }
+            
+            .usdt-title {
+                font-size: 1rem;
+            }
+            
+            .network-badge-large {
+                font-size: 0.85rem;
+                padding: 0.5rem 1rem;
+            }
+            
+            .wallet-address-box {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .wallet-address-box input {
+                font-size: 0.75rem;
+                padding: 0.625rem;
+            }
+            
+            .btn-copy {
+                width: 100%;
+                padding: 0.625rem;
+                font-size: 0.9rem;
+            }
+            
+            .usdt-warning {
+                font-size: 0.85rem;
+                padding: 0.75rem;
+            }
+            
+            .usdt-steps {
+                padding: 0.875rem;
+            }
+            
+            .usdt-steps li {
+                font-size: 0.85rem;
+                padding: 0.5rem 0;
+            }
+            
+            #txHash {
+                font-size: 0.85rem;
+                padding: 0.75rem;
+            }
         }
     </style>
 </head>
@@ -620,6 +804,48 @@
                 <div class="info-box">
                     <i class="fas fa-info-circle"></i>
                     <strong>Note:</strong> Please select your preferred payment method before proceeding.
+                </div>
+
+                <!-- USDT Payment Instructions -->
+                <div id="usdtInstructions" class="usdt-payment-card" style="display: none;">
+                    <h3 class="usdt-title">
+                        <i class="fas fa-wallet"></i> Deposit USDT to Binance
+                    </h3>
+                    
+                    <div class="usdt-network-info">
+                        <div class="network-badge-large">BNB Smart Chain (BEP20)</div>
+                    </div>
+
+                    <div class="usdt-wallet-section">
+                        <label>Wallet Address:</label>
+                        <div class="wallet-address-box">
+                            <input type="text" id="walletAddress" value="0x7afa5dc428f53e86ceb8957fe955e2a85539f4060" readonly>
+                            <button type="button" class="btn-copy" onclick="copyWalletAddress()">
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="usdt-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Don't send NFTs to this address.
+                    </div>
+
+                    <div class="usdt-steps">
+                        <h4>How to Pay:</h4>
+                        <ol>
+                            <li>Copy the wallet address above</li>
+                            <li>Open your Binance app or crypto wallet</li>
+                            <li>Send USDT on <strong>BEP20 network only</strong></li>
+                            <li>Enter the transaction hash below after sending</li>
+                        </ol>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txHash">Transaction Hash (After Payment) *</label>
+                        <input type="text" id="txHash" name="txHash" placeholder="Enter your USDT transaction hash">
+                        <small style="color: #666; font-size: 0.85rem;">You'll receive this after completing the USDT transfer</small>
+                    </div>
                 </div>
             </div>
 
@@ -780,9 +1006,41 @@
                 paymentMethods.forEach(m => m.classList.remove('selected'));
                 method.classList.add('selected');
                 selectedMethod = method.dataset.method;
+                
+                // Show/hide USDT instructions
+                const usdtInstructions = document.getElementById('usdtInstructions');
+                if (selectedMethod === 'usdt') {
+                    usdtInstructions.style.display = 'block';
+                    usdtInstructions.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    usdtInstructions.style.display = 'none';
+                }
+                
                 updateSummary();
             });
         });
+
+        // Copy wallet address function
+        function copyWalletAddress() {
+            const walletInput = document.getElementById('walletAddress');
+            walletInput.select();
+            walletInput.setSelectionRange(0, 99999); // For mobile devices
+            
+            navigator.clipboard.writeText(walletInput.value).then(() => {
+                const btn = event.target.closest('.btn-copy');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                btn.style.background = '#28a745';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy address. Please copy manually.');
+            });
+        }
 
         // Update summary on amount change
         amountInput.addEventListener('input', updateSummary);
@@ -818,6 +1076,15 @@
                 return;
             }
 
+            // Validate USDT transaction hash if USDT is selected
+            if (selectedMethod === 'usdt') {
+                const txHash = document.getElementById('txHash').value.trim();
+                if (!txHash) {
+                    showAlert('Please enter your USDT transaction hash', 'error');
+                    return;
+                }
+            }
+
             const amount = parseFloat(amountInput.value);
             const fee = amount * 0.02;
             const total = amount + fee;
@@ -833,7 +1100,8 @@
                 customerName: document.getElementById('fullName').value,
                 customerPhone: document.getElementById('phone').value,
                 customerEmail: document.getElementById('email').value,
-                notes: document.getElementById('notes').value
+                notes: document.getElementById('notes').value,
+                transactionHash: selectedMethod === 'usdt' ? document.getElementById('txHash').value : null
             };
 
             submitBtn.disabled = true;
