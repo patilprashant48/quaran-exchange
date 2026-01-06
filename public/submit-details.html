@@ -546,7 +546,7 @@
                     notes: document.getElementById('notes').value.trim()
                 };
 
-                const response = await fetch('http://localhost:3000/api/submissions/create', {
+                const response = await fetch('/api/submissions/create', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
